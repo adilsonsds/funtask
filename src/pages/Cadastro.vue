@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Cadastrar-se</h4>
-                        <form v-on:submit.prevent="criarUsuario">
+                        <form v-on:submit.prevent="cadastrar">
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-6 col-12">
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import usuarioService from "../services/UsuarioService";
+import { criarUsuario } from "../services/UsuarioService";
 
 export default {
   data() {
@@ -59,15 +59,14 @@ export default {
     };
   },
   methods: {
-    criarUsuario() {
-      let params = {
-        nome: this.nome,
-        sobrenome: this.sobrenome,
-        email: this.email,
-        senha: this.senha
-      };
-
-      usuarioService.create(params);
+    cadastrar() {
+      criarUsuario(this.nome, this.sobrenome, this.email, this.senha)
+        .then(response => {
+          console.log("id: " + respose.data);
+        })
+        .catch(() => {
+          console.log("erro durante a requisição");
+        });
     }
   }
 };

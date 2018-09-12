@@ -1,12 +1,10 @@
-import api from './Api';
+import Http from './Http';
 
-export default class UsuarioService {
-
-  create = (dados) => {
-    return api.post('/usuario', dados);
-  }
-
-  get = (filtro) => {
-    return api.get('/usuario', filtro);
-  }
-}
+export const criarUsuario = (nome, sobrenome, email, senha) => {
+  return Http.post('/usuario', {
+    Nome: nome,
+    Sobrenome: sobrenome,
+    Email: email,
+    Senha: senha
+  });
+};
