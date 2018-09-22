@@ -7,7 +7,7 @@ import CaseCriterios from '../pages/CaseCriterios';
 import Licao from '../pages/Licao';
 
 export default [{
-  path: '/case',
+  path: '/case/:id',
   name: 'case',
   component: Case,
   title: 'Case',

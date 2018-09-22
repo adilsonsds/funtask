@@ -5,6 +5,9 @@
             <router-link :to="{ name: 'home' }">Home</router-link>
         </li>
         <li>
+            <router-link :to="{ name: 'dashboard' }">Dashboard</router-link>
+        </li>
+        <li>
             <router-link :to="{ name: 'cadastro' }">Cadastro</router-link>
         </li>
         <li>
@@ -17,10 +20,10 @@
             <router-link :to="{ name: 'group' }">Grupo</router-link>
         </li>
         <li>
-            <router-link :to="{ name: 'case' }">Case</router-link>
+            <router-link :to="{ name: 'case', params: { id: 1 }}">Case</router-link>
         </li>
         <li>
-            <router-link :to="{ name: 'case-licao' }">Lição</router-link>
+            <router-link :to="{ name: 'case-licao', params: { id: 1 }}">Lição</router-link>
         </li>
     </ul>
     <router-view></router-view>

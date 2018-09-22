@@ -18,6 +18,7 @@
                             <i class="fas fa-star" style="font-size: 15px;"></i>
                             <i class="fas fa-star-half-alt" style="font-size: 15px;"></i>
                         </li>
+                        <li class="list-group-item">id: {{ $route.params.id }}</li>
                         <li class="list-group-item">
                             <button class="btn btn-success btn-xs">Inscreve-se</button>
                         </li>
@@ -51,3 +52,12 @@
     </div>
 </div>
 </template>
+<script>
+export default {
+  props: {
+    id: {
+      type: Number
+    }
+  }
+};
+</script>
