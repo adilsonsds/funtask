@@ -1,11 +1,11 @@
 <template>
     <main class="container">
-        <div class="row mt-4">
+        <div class="row">
             <div class="col-12">
                 <div class="d-flex justify-content-between">
-                    <h5>Meus cases de negócio</h5>
-                    <button @click="$root.$emit('abrir-modal', 'manter-case')">
-                        Criar um case de negócio
+                    <h5>Meus Cases de Negócio</h5>
+                    <button class="btn btn-primary btn-sm" @click="$root.$emit('abrir-modal', 'manter-case')">
+                        Criar um Case de Negócio
                     </button>
                 </div>
             </div>

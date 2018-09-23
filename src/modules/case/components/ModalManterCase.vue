@@ -85,7 +85,7 @@ export default {
   },
   computed: {
     titulo() {
-      return this.Id > 0 ? "Editar case de negócio" : "Criar case de negócio";
+      return this.Id > 0 ? "Editar Case de Negócio" : "Criar Case de Negócio";
     }
   },
   methods: {
