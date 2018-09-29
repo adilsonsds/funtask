@@ -5,37 +5,37 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Cadastrar-se</h4>
-                        <form v-on:submit.prevent="cadastrar">
+                        <form v-on:submit.prevent="realizarCadastro">
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-6 col-12">
                                         <label for="nome">Nome</label>
-                                        <input id="nome" type="text" class="form-control" v-model="nome">
+                                        <input id="nome" type="text" class="form-control" v-model="Nome" minlength="3" maxlength="50" required>
                                     </div>
                                     <div class="col-sm-6 col-12">
                                         <label for="sobrenome">Sobrenome</label>
-                                        <input id="sobrenome" type="text" class="form-control" v-model="sobrenome">
+                                        <input id="sobrenome" type="text" class="form-control" v-model="Sobrenome" minlength="2" maxlength="49" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email">E-mail</label>
-                                <input id="email" type="email" class="form-control" v-model="email">
+                                <input id="email" type="email" class="form-control" v-model="Email" maxlength="100" required>
                             </div>
                             <div class="form-group">
                                 <label for="senha">Senha</label>
-                                <input id="senha" type="password" class="form-control" v-model="senha">
+                                <input id="senha" type="password" class="form-control" v-model="Senha" minlength="6" maxlength="20" required>
                             </div>
                             <div class="form-group">
                                 <label for="confirme-senha">Confirme a senha</label>
-                                <input id="confirme-senha" type="password" class="form-control" v-model="senhaConfirmacao">
+                                <input id="confirme-senha" type="password" class="form-control" v-model="SenhaConfirmacao" minlength="6" maxlength="20" required>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
                             </div>
                             <div class="text-center">
                                 Já possui uma conta?
-                                <router-link to="/login">Entrar</router-link>
+                                <router-link :to="{ name: 'login' }">Entrar</router-link>
                             </div>
                         </form>
                     </div>
@@ -46,26 +46,28 @@
 </template>
 
 <script>
-import { criarUsuario } from "../services/UsuarioService";
+import { cadastrarUsuario } from "@/services/UsuarioService";
 
 export default {
   data() {
     return {
-      nome: "",
-      sobrenome: "",
-      email: "",
-      senha: "",
-      senhaConfirmacao: ""
+      Nome: "",
+      Sobrenome: "",
+      Email: "",
+      Senha: "",
+      SenhaConfirmacao: ""
     };
   },
   methods: {
-    cadastrar() {
-      criarUsuario(this.nome, this.sobrenome, this.email, this.senha)
+    realizarCadastro() {
+      const self = this;
+
+      cadastrarUsuario(this.Nome, this.Sobrenome, this.Email, this.Senha)
         .then(response => {
-          console.log("id: " + respose.data);
+          self.$router.push({ name: "dashboard" });
         })
-        .catch(() => {
-          console.log("erro durante a requisição");
+        .catch(mensagem => {
+          alert(mensagem || "Preencha os dados corretamente.");
         });
     }
   }

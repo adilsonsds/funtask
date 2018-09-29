@@ -5,25 +5,24 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Entrar</h4>
-                        <form>
+                        <form @submit.prevent="efetuarLogin">
                             <div class="form-group">
                                 <label for="email">E-mail</label>
-                                <input id="email" name="email" type="email" class="form-control">
+                                <input id="email" name="email" type="email" v-model="Email" class="form-control" max="100" required>
                             </div>
                             <div class="form-group">
                                 <div class="d-flex justify-content-between">
                                     <label for="senha">Senha</label>
-                                    <a href=""  data-toggle="modal" data-target="#modal-esqueceu-senha">Esqueceu sua senha?</a>
+                                    <!-- <a href=""  data-toggle="modal" data-target="#modal-esqueceu-senha">Esqueceu sua senha?</a> -->
                                 </div>
-                                <input id="senha" name="senha" type="password" class="form-control">
+                                <input id="senha" name="senha" type="password" v-model="Senha" class="form-control" minlength="6" maxlength="50" required>
                             </div>
                             <div class="form-group">
-                                <!-- <button type="submit" class="btn btn-primary btn-block">Entrar</button> -->
-                                <a href="dashboard.html" class="btn btn-primary btn-block">Entrar</a>
+                                <button type="submit" class="btn btn-primary btn-block">Entrar</button>
                             </div>
                             <div class="text-center">
                                 Não possui uma conta?
-                                <a href="cadastro.html">Cadastre-se</a>
+                                <router-link :to="{ name: 'cadastro'}">Cadastre-se</router-link>
                             </div>
                         </form>
                     </div>
@@ -64,3 +63,27 @@
         </div>
     </div>
 </template>
+<script>
+import { Autenticar } from "@/services/AuthService";
+
+export default {
+  data() {
+    return {
+      Email: "",
+      Senha: ""
+    };
+  },
+  methods: {
+    efetuarLogin() {
+      const self = this;
+      Autenticar(this.Email, this.Senha)
+        .then(() => {
+          self.$router.push({ name: "dashboard" });
+        })
+        .catch(() => {
+          alert("Usuário e/ou senha inválidos.");
+        });
+    }
+  }
+};
+</script>

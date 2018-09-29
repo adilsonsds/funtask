@@ -1,6 +1,6 @@
 import Http from './Http';
 
-export const criarUsuario = (nome, sobrenome, email, senha) => {
+export const cadastrarUsuario = (nome, sobrenome, email, senha) => {
   return Http.post('/usuario', {
     Nome: nome,
     Sobrenome: sobrenome,
