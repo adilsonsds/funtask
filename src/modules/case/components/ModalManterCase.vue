@@ -30,17 +30,17 @@
                                         <div class="form-group col-md-6">
                                             <label for="aceita-grupos">Aceita grupos</label>
                                             <select v-model="permiteMontarGrupos" id="aceita-grupos" class="form-control" required>
-                                                <option value="0">Não</option>
-                                                <option value="1">Sim</option>
+                                                <option value="false">Não</option>
+                                                <option value="true">Sim</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-3" v-if="permiteMontarGrupos == 1">
+                                        <div class="form-group col-md-3" v-if="deveInformarQtdDeAlunosPorGrupo">
                                             <label for="minimo-grupos">Mínimo</label>
-                                            <input v-model="minimoDeAlunosPorGrupo" type="number" class="form-control" id="minimo-grupos" min="1" step="1">
+                                            <input v-model="minimoAlunosGrupo" type="number" class="form-control" id="minimo-grupos" min="1" step="1">
                                         </div>
-                                        <div class="form-group col-md-3" v-if="permiteMontarGrupos == 1">
+                                        <div class="form-group col-md-3" v-if="deveInformarQtdDeAlunosPorGrupo">
                                             <label for="maximo-grupos">Máximo</label>
-                                            <input v-model="maximoDeAlunosPorGrupo" type="number" class="form-control" id="maximo-grupos" min="1" step="1">
+                                            <input v-model="maximoAlunosGrupo" type="number" class="form-control" id="maximo-grupos" min="1" step="1">
                                         </div>
                                     </div>
                                 </div>
@@ -67,8 +67,8 @@ export default {
       nome: "",
       textoDeApresentacao: "",
       permiteMontarGrupos: 0,
-      minimoDeAlunosPorGrupo: "",
-      maximoDeAlunosPorGrupo: ""
+      minimoAlunosGrupo: "",
+      maximoAlunosGrupo: ""
     };
   },
   props: {
@@ -82,6 +82,9 @@ export default {
       return this.ehNovoCadastro
         ? "Editar Case de Negócio"
         : "Criar Case de Negócio";
+    },
+    deveInformarQtdDeAlunosPorGrupo() {
+      return this.permiteMontarGrupos == true;
     }
   },
   methods: {
@@ -91,9 +94,9 @@ export default {
       obterPorId(this.id).then(response => {
         self.nome = response.data.nome;
         self.textoDeApresentacao = response.data.textoDeApresentacao;
-        self.permiteMontarGrupos = response.data.permiteMontarGrupos ? 1 : 0;
-        self.minimoDeAlunosPorGrupo = response.data.minimoDeAlunosPorGrupo;
-        self.maximoDeAlunosPorGrupo = response.data.maximoDeAlunosPorGrupo;
+        self.permiteMontarGrupos = response.data.permiteMontarGrupos;
+        self.minimoAlunosGrupo = response.data.minimoAlunosGrupo;
+        self.maximoAlunosGrupo = response.data.maximoAlunosGrupo;
       });
     },
     salvar() {
@@ -114,8 +117,8 @@ export default {
       this.nome = "";
       this.textoDeApresentacao = "";
       this.permiteMontarGrupos = 0;
-      this.minimoDeAlunosPorGrupo = "";
-      this.maximoDeAlunosPorGrupo = "";
+      this.minimoAlunosGrupo = "";
+      this.maximoAlunosGrupo = "";
     }
   },
   created() {

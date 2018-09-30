@@ -22,10 +22,10 @@
                                 <button class="btn btn-success btn-xs">Inscreve-se</button>
                             </li>
                             <li class="list-group-item">
-                                <button @click.prevent="abrirModalManterCase" type="button" class="btn btn-primary btn-xs">Editar</button>
+                                <button @click.prevent="abrirModalManterCase()" type="button" class="btn btn-primary btn-xs">Editar</button>
                             </li>
                             <li class="list-group-item">Por
-                                <router-link :to="{ name: 'user' }">Rafael Targino</router-link>
+                                <router-link :to="{ name: 'user', params: { id: idProfessor } }">{{ nomeProfessor }}</router-link>
                             </li>
                         </ul>
                     </div>
@@ -49,7 +49,7 @@
                         <router-link :to="{ name: 'case-criterios' }" class="nav-link">Critérios</router-link>
                     </li>
                 </ul>
-                <router-view></router-view>
+                <router-view :texto="textoDeApresentacao"></router-view>
             </div>
         </div>
         <modal-manter-case idModal="manter-case"></modal-manter-case>
@@ -63,7 +63,10 @@ export default {
       id: "",
       nome: "",
       permiteInscricao: false,
-      permiteMontarGrupos: false
+      permiteMontarGrupos: false,
+      textoDeApresentacao: "",
+      idProfessor: 0,
+      nomeProfessor: ""
     };
   },
   components: {
@@ -82,7 +85,10 @@ export default {
       const self = this;
       obterPorId(self.id).then(response => {
         self.nome = response.data.nome;
+        self.textoDeApresentacao = response.data.textoDeApresentacao;
         self.permiteMontarGrupos = response.data.permiteMontarGrupos;
+        self.idProfessor = response.data.idProfessor;
+        self.nomeProfessor = response.data.nomeProfessor;
       });
     }
   },
