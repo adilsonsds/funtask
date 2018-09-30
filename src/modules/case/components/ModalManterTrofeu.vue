@@ -101,16 +101,17 @@ export default {
     }
   },
   created() {
-    this.$root.$on("abrir-modal", params => {
-      if (this.idModal === params.idModal) {
-        this.idCase = params.idCase;
-        
+    const self = this;
+    self.$root.$on("abrir-modal", params => {
+      if (self.idModal === params.idModal) {
+        self.idCase = params.idCase;
+
         if (!isNaN(params.idTrofeu)) {
-          this.id = params.idTrofeu;
-          this.carregarDados();
+          self.id = params.idTrofeu;
+          self.carregarDados();
         }
 
-        this.visible = true;
+        self.visible = true;
       }
     });
   }

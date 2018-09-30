@@ -2,7 +2,7 @@
     <div class="container">
         <form @submit.prevent="salvar">
             <div class="d-flex justify-content-between">
-                <a class="h3" href="case-professor.html">Jogo Engenharia de Software</a>
+                <router-link class="h3" :to="{ name: 'case-licoes', params: { id: idCase }}" >{{ nomeCase }}</router-link>
                 <div>
                     <button type="submit" class="btn btn-success">Salvar</button>
                     <!-- <button type="button" @click.prevent="excluir" class="btn btn-outline-danger">Excluir</button> -->
@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     <div class="col-sm-5 col-3 text-right">
-                        <button class="btn btn-danger btn-sm">Excluir</button>
+                        <button type="button" @click="removerQuestao(index)" class="btn btn-danger btn-sm">Excluir</button>
                     </div>
                 </div>
                 <div class="row">
@@ -88,12 +88,17 @@
 </template>
 
 <script>
-import { obterLicaoPorId, manterLicao } from "@/services/CaseService";
+import {
+  obterPorId,
+  obterLicaoPorId,
+  manterLicao
+} from "@/services/CaseService";
 export default {
   data() {
     return {
       id: 0,
       idCase: 0,
+      nomeCase: "",
       titulo: "",
       textoApresentacao: "",
       descricao: "",
@@ -124,6 +129,7 @@ export default {
     carregarDados() {
       const self = this;
       obterLicaoPorId(self.idCase, self.id).then(response => {
+        self.nomeCase = response.data.nomeCase;
         self.titulo = response.data.titulo;
         self.textoApresentacao = response.data.textoApresentacao;
         self.descricao = response.data.descricao;
@@ -138,11 +144,17 @@ export default {
         self.permiteEntregar = response.data.permiteEntregar;
         response.data.questoes.forEach(q => {
           self.questoes.push({
-              id: q.id,
-              titulo: q.titulo,
-              notaMaxima: q.notaMaxima
+            id: q.id,
+            titulo: q.titulo,
+            notaMaxima: q.notaMaxima
           });
         });
+      });
+    },
+    carregarDadosDoCase() {
+      const self = this;
+      obterPorId(self.idCase).then(response => {
+        self.nomeCase = response.data.nome;
       });
     },
     salvar() {
@@ -157,14 +169,21 @@ export default {
         .catch(() => {
           alert("Erro ao salvar.");
         });
+    },
+    removerQuestao(index) {
+      this.questoes.splice(index, 1);
     }
   },
   created() {
     this.id = this.$route.params.idLicao;
     this.idCase = this.$route.params.idCase;
 
-    if (this.id > 0) this.carregarDados();
-    else this.adicionarQuestao();
+    if (this.id > 0) {
+      this.carregarDados();
+    } else {
+      this.carregarDadosDoCase();
+      this.adicionarQuestao();
+    }
   }
 };
 </script>

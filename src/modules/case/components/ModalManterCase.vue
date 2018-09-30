@@ -66,7 +66,7 @@ export default {
       id: 0,
       nome: "",
       textoDeApresentacao: "",
-      permiteMontarGrupos: 0,
+      permiteMontarGrupos: "false",
       minimoAlunosGrupo: "",
       maximoAlunosGrupo: ""
     };
@@ -84,17 +84,19 @@ export default {
         : "Criar Case de Negócio";
     },
     deveInformarQtdDeAlunosPorGrupo() {
-      return this.permiteMontarGrupos == true;
+      return this.permiteMontarGrupos == "true";
     }
   },
   methods: {
     carregarDados() {
       const self = this;
 
-      obterPorId(this.id).then(response => {
+      obterPorId(self.id).then(response => {
         self.nome = response.data.nome;
         self.textoDeApresentacao = response.data.textoDeApresentacao;
-        self.permiteMontarGrupos = response.data.permiteMontarGrupos;
+        self.permiteMontarGrupos = response.data.permiteMontarGrupos
+          ? "true"
+          : "false";
         self.minimoAlunosGrupo = response.data.minimoAlunosGrupo;
         self.maximoAlunosGrupo = response.data.maximoAlunosGrupo;
       });
@@ -116,20 +118,21 @@ export default {
       this.id = 0;
       this.nome = "";
       this.textoDeApresentacao = "";
-      this.permiteMontarGrupos = 0;
+      this.permiteMontarGrupos = "false";
       this.minimoAlunosGrupo = "";
       this.maximoAlunosGrupo = "";
     }
   },
   created() {
-    this.$root.$on("abrir-modal", params => {
-      if (this.idModal === params.idModal) {
+    const self = this;
+    self.$root.$on("abrir-modal", params => {
+      if (self.idModal === params.idModal) {
         if (!isNaN(params.idCase)) {
-          this.id = params.idCase;
-          this.carregarDados();
+          self.id = params.idCase;
+          self.carregarDados();
         }
 
-        this.visible = true;
+        self.visible = true;
       }
     });
   }
