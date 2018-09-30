@@ -1,130 +1,170 @@
 <template>
     <div class="container">
-        <div class="row mb-2">
-            <div class="col-lg-8 col-sm-12">
-                <h3>
-                    <a href="case.html">Jogo Engenharia de Software</a>
-                </h3>
-                <h5>Lição: Analisando os requisitos</h5>
-                <h6>Responsáveis: <a href="grupo.html">Scorpion</a></h6>
-            </div>
-            <div class="col-lg-4 col-sm-12 text-right">
-                <div class="d-block">
-                    <a href="case.html" class="btn btn-success">Entregar lição</a>
-                </div>
-                <div class="d-block mt-2">
-                    <h6>Termina em: 02/09/2018 (2 dias)</h6>
+        <form @submit.prevent="salvar">
+            <div class="d-flex justify-content-between">
+                <a class="h3" href="case-professor.html">Jogo Engenharia de Software</a>
+                <div>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <!-- <button type="button" @click.prevent="excluir" class="btn btn-outline-danger">Excluir</button> -->
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-1 col-md-12 text-center">
-                <div class="nav" role="tablist">
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-1" role="tab" class="btn btn-secondary m-1 nav-item">1</button>
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-2" role="tab" class="btn btn-secondary m-1 nav-item">2</button>
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-3" role="tab" class="btn btn-secondary m-1 nav-item">3</button>
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-1" role="tab" class="btn btn-secondary m-1 nav-item">4</button>
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-1" role="tab" class="btn btn-secondary m-1 nav-item">5</button>
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-1" role="tab" class="btn btn-secondary m-1 nav-item">6</button>
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-1" role="tab" class="btn btn-secondary m-1 nav-item">7</button>
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-1" role="tab" class="btn btn-secondary m-1 nav-item">8</button>
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-1" role="tab" class="btn btn-secondary m-1 nav-item">9</button>
-                    <button style="min-width: 45px;" data-toggle="list" href="#questao-1" role="tab" class="btn btn-secondary m-1 nav-item">10</button>
+            <div class="form-group mt-4">
+                <label for="licao-nome">Título da lição:</label>
+                <input id="licao-nome" type="text" class="form-control" v-model="titulo" minlength="3" maxlength="200" required>
+            </div>
+            <div class="form-group mt-4">
+                <label for="licao-descricao">Descrição:</label>
+                <textarea id="licao-descricao" class="form-control" rows="2" v-model="descricao" minlength="3" maxlength="500" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="licao-apresentacao">Apresentação:</label>
+                <textarea id="licao-apresentacao" class="form-control" rows="5" v-model="textoApresentacao" minlength="3" maxlength="5000"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-lg-6 col-md-12">
+                    <label for="licao-realizado-como">Realizado:</label>
+                    <select id="licao-realizado-como" class="form-control" v-model="formaDeEntrega" required>
+                        <option value="0">Apenas individualmente</option>
+                        <option value="1">Individualmente ou em grupo</option>
+                        <option value="2">Apenas em grupo</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3 col-md-6">
+                    <label for="licao-liberacao">Liberação em</label>
+                    <input id="licao-liberacao" type="datetime-local" class="form-control" v-model="dataLiberacao" required>
+                </div>
+                <div class="form-group col-lg-3 col-md-6">
+                    <label for="licao-encerramento">Encerramento em</label>
+                    <input id="licao-encerramento" type="datetime-local" class="form-control" v-model="dataEncerramento" required>
                 </div>
             </div>
-            <div class="col-lg-11 col-md-12">
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="questao-1" role="tabpanel">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">Questão 1 de 10</h5>
-                                <p class="card-text">O Targino falou que vocês estão estudando processos de desenvolvimento
-                                    de software. Vocês poderiam me dizer qual o processo eu estou utilizando e se este
-                                    processo é adequado ou não ao meu cenário? (não esqueçam de justificar bem os motivos
-                                    para dizer se este processo é adequado ou não, pois preciso passar esta informação
-                                    para o meu diretor).</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="">Os alunos podem entregar esta lição fora do prazo?</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" v-model="permiteEntregasForaDoPrazo" value="true" id="entregar-fora-prazo-nao" name="entregar-fora-prazo" class="custom-control-input">
+                        <label class="custom-control-label" for="entregar-fora-prazo-nao">Sim</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" v-model="permiteEntregasForaDoPrazo" value="false" id="entregar-fora-prazo-sim" name="entregar-fora-prazo" class="custom-control-input">
+                        <label class="custom-control-label" for="entregar-fora-prazo-sim">Não</label>
+                    </div>
+                </div>
+            </div>        
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h3>Questões</h3>
+                    <hr>
+                </div>
+            </div>
+            <div class="mt-2 mb-4" v-for="(questao, index) in questoes" :key="questao.id">
+                <div class="row">
+                    <div class="col-1">
+                        <h4>#{{ index + 1 }}</h4>
+                    </div>
+                    <div class="col-sm-6 col-7">
+                        <div class="input-group input-group-sm mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Nota</div>
                             </div>
-                        </div>
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    Sua resposta
-                                    <button class="btn btn-primary btn-sm float-right">Salvar rascunho</button>
-                                </h5>
-                                <textarea class="form-control" rows="10"></textarea>
-                            </div>
+                            <input v-model="questao.notaMaxima" type="text" class="form-control">
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="questao-2" role="tabpanel">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">Questão 2 de 10</h5>
-                                <p class="card-text">O Targino falou que vocês estão estudando processos de desenvolvimento
-                                    de software. Vocês poderiam me dizer qual o processo eu estou utilizando e se este
-                                    processo é adequado ou não ao meu cenário? (não esqueçam de justificar bem os motivos
-                                    para dizer se este processo é adequado ou não, pois preciso passar esta informação
-                                    para o meu diretor).</p>
-                            </div>
-                        </div>
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">Sua resposta</h5>
-                                <p class="card-text">
-                                    Analisando as informações que voce nos passou percebemos que voce está utilizando o modelo em cascata. Ele não é o mais aconselhável
-                                    para voce pois toma muito tempo da produção e não há a certeza do software ser feito
-                                    dentro de todos os requisitos, pois como ele faz o software interi se baseando na
-                                    primeira e unica analise e levantamento de requisitos o produto final sera imutável.
-                                    E como sabemos o mundo de hoje é extremamente ágil. O processo que nós recomendamos
-                                    é o processo em espiral, com ele voce estará analisando o software e seus sunprodutos
-                                    constantemente, e como tera uma entrega parcial do software de tempo em tempo voces
-                                    poderam mostrar que o trabalho está realmente sendo feito.
-                                </p>
-                            </div>
-                        </div>
+                    <div class="col-sm-5 col-3 text-right">
+                        <button class="btn btn-danger btn-sm">Excluir</button>
                     </div>
-                    <div class="tab-pane fade" id="questao-3" role="tabpanel">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">Questão 3 de 10</h5>
-                                <p class="card-text">O Targino falou que vocês estão estudando processos de desenvolvimento
-                                    de software. Vocês poderiam me dizer qual o processo eu estou utilizando e se este
-                                    processo é adequado ou não ao meu cenário? (não esqueçam de justificar bem os motivos
-                                    para dizer se este processo é adequado ou não, pois preciso passar esta informação
-                                    para o meu diretor).</p>
-                            </div>
-                        </div>
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">Sua resposta</h5>
-                                <p class="card-text">
-                                    Analisando as informações que voce nos passou percebemos que voce está utilizando o modelo em cascata. Ele não é o mais aconselhável
-                                    para voce pois toma muito tempo da produção e não há a certeza do software ser feito
-                                    dentro de todos os requisitos, pois como ele faz o software interi se baseando na
-                                    primeira e unica analise e levantamento de requisitos o produto final sera imutável.
-                                    E como sabemos o mundo de hoje é extremamente ágil. O processo que nós recomendamos
-                                    é o processo em espiral, com ele voce estará analisando o software e seus sunprodutos
-                                    constantemente, e como tera uma entrega parcial do software de tempo em tempo voces
-                                    poderam mostrar que o trabalho está realmente sendo feito.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">Avaliação</h5>
-                                <p class="card-text">
-                                    Excelente resposta. Parabéns! Não fique animado pois as próximas lições serão ainda mais difícies. Boa sorte!
-                                </p>
-                                <h6>Nota: 90/100</h6>
-                                <div class="card-text">
-                                    <i class="fas fa-trophy" style="font-size: 50px;"></i>
-                                    <h6>Melhor resposta</h6>
-                                    <span>Foi a mais completa e objetiva. Parabéns!</span>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <textarea v-model="questao.titulo" class="form-control" rows="10"></textarea>
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="d-block mt-2 mb-5">
+                <button @click.prevent="adicionarQuestao" class="btn btn-primary">Adicionar questão</button>
+            </div>
+        </form>
     </div>
 </template>
+
+<script>
+import { obterLicaoPorId, manterLicao } from "@/services/CaseService";
+export default {
+  data() {
+    return {
+      id: 0,
+      idCase: 0,
+      titulo: "",
+      textoApresentacao: "",
+      descricao: "",
+      formaDeEntrega: 0,
+      dataLiberacao: "",
+      dataEncerramento: "",
+      permiteEntregasForaDoPrazo: false,
+      permiteEditar: false,
+      permiteAvaliar: false,
+      permiteRealizar: false,
+      permiteEntregar: false,
+      questoes: []
+    };
+  },
+  methods: {
+    adicionarQuestao() {
+      this.questoes.push({
+        id: "",
+        titulo: "",
+        notaMaxima: 1
+      });
+    },
+    excluir() {
+      if (confirm("Confirma a exclusão da lição?")) {
+        alert("confirmado");
+      }
+    },
+    carregarDados() {
+      const self = this;
+      obterLicaoPorId(self.idCase, self.id).then(response => {
+        self.titulo = response.data.titulo;
+        self.textoApresentacao = response.data.textoApresentacao;
+        self.descricao = response.data.descricao;
+        self.formaDeEntrega = response.data.formaDeEntrega;
+        self.dataLiberacao = response.data.dataLiberacao;
+        self.dataEncerramento = response.data.dataEncerramento;
+        self.permiteEntregasForaDoPrazo =
+          response.data.permiteEntregasForaDoPrazo;
+        self.permiteEditar = response.data.permiteEditar;
+        self.permiteAvaliar = response.data.permiteAvaliar;
+        self.permiteRealizar = response.data.permiteRealizar;
+        self.permiteEntregar = response.data.permiteEntregar;
+        response.data.questoes.forEach(q => {
+          self.questoes.push({
+              id: q.id,
+              titulo: q.titulo,
+              notaMaxima: q.notaMaxima
+          });
+        });
+      });
+    },
+    salvar() {
+      const self = this;
+      manterLicao(self.$data)
+        .then(response => {
+          self.$router.push({
+            name: "case-licoes",
+            params: { id: self.idCase }
+          });
+        })
+        .catch(() => {
+          alert("Erro ao salvar.");
+        });
+    }
+  },
+  created() {
+    this.id = this.$route.params.idLicao;
+    this.idCase = this.$route.params.idCase;
+
+    if (this.id > 0) this.carregarDados();
+    else this.adicionarQuestao();
+  }
+};
+</script>

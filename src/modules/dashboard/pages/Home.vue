@@ -4,7 +4,7 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between">
                     <h5>Meus Cases de Negócio</h5>
-                    <button class="btn btn-primary btn-sm" @click="$root.$emit('abrir-modal', 'manter-case')">
+                    <button class="btn btn-primary btn-sm" @click.prevent="abrirModalManterCase">
                         Criar um Case de Negócio
                     </button>
                 </div>
@@ -12,7 +12,7 @@
         </div>
         <hr>
         <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-6 text-center" v-for="item in lista" :key="item.id">
+            <div class="col-lg-3 col-md-4 col-sm-6 text-center" v-for="item in listaDeCasesCriados" :key="item.id">
                 <div class="card mb-3">
                     <picture class="card-img-top pt-2">
                         <i class="fab fa-fort-awesome-alt" style="font-size:80px;"></i>
@@ -26,27 +26,43 @@
             </div>  
         </div>
 
-        <modal-manter-case id="manter-case"></modal-manter-case>
+        <modal-manter-case idModal="manter-case"></modal-manter-case>
     </main>
 </template>
 <script>
+import { listarCases } from "@/services/CaseService";
 export default {
   data() {
     return {
-      lista: [
-        { id: 1, nome: "Teste 1" },
-        { id: 2, nome: "Teste 3" },
-        { id: 3, nome: "Teste 3" },
-        { id: 4, nome: "Teste 4" },
-        { id: 5, nome: "Teste 5" },
-        { id: 6, nome: "Teste 2" },
-        { id: 7, nome: "Teste 2" }
-      ]
+      listaDeCasesCriados: []
     };
   },
   components: {
-    'modal-manter-case': () => import("@/modules/case/components/ModalManterCase")
+    "modal-manter-case": () =>
+      import("@/modules/case/components/ModalManterCase")
   },
-  methods: {}
+  methods: {
+    abrirModalManterCase() {
+      const self = this;
+      self.$root.$emit("abrir-modal", {
+        idModal: "manter-case"
+      });
+    },
+    carregarCases() {
+      const self = this;
+
+      listarCases().then(response => {
+        self.listaDeCasesCriados = response.data;
+      });
+    }
+  },
+  created() {
+    const self = this;
+    self.carregarCases();
+
+    self.$root.$on("case-salvo", idCase => {
+      self.$router.push({ name: "case", params: { id: idCase } });
+    });
+  }
 };
 </script>

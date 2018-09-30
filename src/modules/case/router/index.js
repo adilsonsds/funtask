@@ -42,7 +42,7 @@ export default [{
     },
   ],
 }, {
-  path: '/case/licao',
+  path: '/case/:idCase/licao/:idLicao?',
   name: 'case-licao',
   component: Licao,
   title: 'Lição',
