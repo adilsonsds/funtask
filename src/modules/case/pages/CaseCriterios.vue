@@ -29,7 +29,7 @@
     </div>
 </template>
 <script>
-import { listarTrofeus } from "@/services/CaseService";
+import { listar } from "@/services/TrofeuService";
 export default {
   data() {
     return {
@@ -64,7 +64,7 @@ export default {
     },
     carregarTrofeus() {
       const self = this;
-      listarTrofeus(self.idCase).then(response => {
+      listar(self.idCase).then(response => {
         self.listaDeTrofeus = response.data;
       });
     }

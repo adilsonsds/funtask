@@ -46,7 +46,7 @@
     </div>
 </template>
 <script>
-import { obterTrofeuPorId, manterTrofeu } from "@/services/CaseService";
+import { obterPorId, salvar } from "@/services/TrofeuService";
 
 export default {
   data() {
@@ -73,7 +73,7 @@ export default {
   methods: {
     carregarDados() {
       const self = this;
-      obterTrofeuPorId(self.idCase, self.id).then(response => {
+      obterPorId(self.idCase, self.id).then(response => {
         self.nome = response.data.nome;
         self.descricao = response.data.descricao;
         self.pontos = response.data.pontos;
@@ -82,7 +82,7 @@ export default {
     salvar(event) {
       var self = this;
 
-      manterTrofeu(self.$data)
+      salvar(self.$data)
         .then(response => {
           self.fecharModal();
           self.$root.$emit("trofeu-alterado");

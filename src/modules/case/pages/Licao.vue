@@ -88,11 +88,9 @@
 </template>
 
 <script>
-import {
-  obterPorId,
-  obterLicaoPorId,
-  manterLicao
-} from "@/services/CaseService";
+import { obterPorId, salvar } from "@/services/LicaoService";
+import { obterPorId as obterCase } from "@/services/CaseService";
+
 export default {
   data() {
     return {
@@ -128,7 +126,7 @@ export default {
     },
     carregarDados() {
       const self = this;
-      obterLicaoPorId(self.idCase, self.id).then(response => {
+      obterPorId(self.idCase, self.id).then(response => {
         self.nomeCase = response.data.nomeCase;
         self.titulo = response.data.titulo;
         self.textoApresentacao = response.data.textoApresentacao;
@@ -151,15 +149,16 @@ export default {
         });
       });
     },
+    carregarQuestoes() {},
     carregarDadosDoCase() {
       const self = this;
-      obterPorId(self.idCase).then(response => {
+      obterCase(self.idCase).then(response => {
         self.nomeCase = response.data.nome;
       });
     },
     salvar() {
       const self = this;
-      manterLicao(self.$data)
+      salvar(self.$data)
         .then(response => {
           self.$router.push({
             name: "case-licoes",

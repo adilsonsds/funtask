@@ -21,7 +21,7 @@
     </div>
 </template>
 <script>
-import { listarLicoes } from "@/services/CaseService";
+import { listar } from "@/services/LicaoService";
 export default {
   data() {
     return {
@@ -44,8 +44,8 @@ export default {
   methods: {
     carregarDados() {
       const self = this;
-      listarLicoes(self.idCase).then(response => {
-        self.licoes = response.data.licoes;
+      listar(self.idCase).then(response => {
+        self.licoes = response.data;
       });
     }
   },
