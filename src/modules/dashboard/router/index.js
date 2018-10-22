@@ -5,5 +5,8 @@ export default [{
   name: 'dashboard',
   component: Home,
   title: 'Dashboard',
-  icon: 'fa-comments'
+  icon: 'fa-comments',
+  meta: {
+    requiresAuth: true
+  }
 }, ];

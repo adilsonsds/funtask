@@ -76,12 +76,16 @@ export default {
   methods: {
     efetuarLogin() {
       const self = this;
-      Autenticar(this.Email, this.Senha)
-        .then(() => {
+      self.$store.dispatch("login");
+
+      Autenticar(self.Email, self.Senha)
+        .then(res => {
+          self.$store.commit("loginSuccess", res);
           self.$router.push({ name: "dashboard" });
         })
-        .catch(() => {
-          alert("Usuário e/ou senha inválidos.");
+        .catch(error => {
+          self.$store.commit("loginFailed", { error });
+          alert(error);
         });
     }
   }
