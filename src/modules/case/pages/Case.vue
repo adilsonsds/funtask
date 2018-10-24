@@ -18,11 +18,14 @@
                                 <i class="fas fa-star" style="font-size: 15px;"></i>
                                 <i class="fas fa-star-half-alt" style="font-size: 15px;"></i>
                             </li>
-                            <li v-if="permiteInscricao" class="list-group-item">
-                                <button class="btn btn-success btn-xs">Inscreve-se</button>
+                            <li v-if="permiteSeInscrever" class="list-group-item">
+                                <button @click.prevent="inscreverNoCase" type="button" class="btn btn-success btn-xs">Inscreve-se</button>
                             </li>
-                            <li class="list-group-item">
-                                <button @click.prevent="abrirModalManterCase()" type="button" class="btn btn-primary btn-xs">Editar</button>
+                            <li class="list-group-item" v-else-if="inscrito">
+                                Inscrito
+                            </li>
+                            <li v-if="permiteEditar" class="list-group-item">
+                                <button @click.prevent="abrirModalManterCase" type="button" class="btn btn-primary btn-xs">Editar</button>
                             </li>
                             <li class="list-group-item">Por
                                 <router-link :to="{ name: 'user', params: { id: idProfessor } }">{{ nomeProfessor }}</router-link>
@@ -56,13 +59,15 @@
     </div>
 </template>
 <script>
-import { obterPorId } from "@/services/CaseService";
+import { obterPorId, inscreverAlunoNoCase } from "@/services/CaseService";
 export default {
   data() {
     return {
       id: "",
       nome: "",
-      permiteInscricao: false,
+      permiteEditar: false,
+      inscrito: false,
+      permiteSeInscrever: false,
       permiteMontarGrupos: false,
       textoDeApresentacao: "",
       idProfessor: 0,
@@ -81,6 +86,17 @@ export default {
         idCase: self.id
       });
     },
+    inscreverNoCase() {
+      inscreverAlunoNoCase(this.id)
+        .then(() => {
+          this.inscrito = true;
+          this.permiteSeInscrever = false;
+          alert("Inscrição realizada com sucesso.");
+        })
+        .catch(() => {
+          alert("Não foi possível realizar a inscrição.");
+        });
+    },
     carregarDados() {
       const self = this;
       obterPorId(self.id).then(response => {
@@ -89,6 +105,9 @@ export default {
         self.permiteMontarGrupos = response.data.permiteMontarGrupos;
         self.idProfessor = response.data.idProfessor;
         self.nomeProfessor = response.data.nomeProfessor;
+        self.permiteEditar = response.data.permiteEditar;
+        self.inscrito = response.data.inscrito;
+        self.permiteSeInscrever = response.data.permiteSeInscrever;
       });
     }
   },

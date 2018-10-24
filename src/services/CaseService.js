@@ -14,3 +14,7 @@ export const manterCase = (caseDeNegocio) => {
   else
     return Http.post('cases', caseDeNegocio);
 };
+
+export const inscreverAlunoNoCase = (idCaseDeNegocio) => {
+  return Http.post(`cases/${ idCaseDeNegocio }/inscrever`);
+}
