@@ -14,14 +14,30 @@
                 <p class="card-text">
                     {{ licao.descricao }}
                 </p>
-                <router-link class="btn btn-warning" :to="{ name: 'case-licao', params: { idCase: idCase, idLicao: licao.id }}">Editar</router-link>
-                <a class="btn btn-primary" href="avaliar-respostas.html">Avaliar respostas</a>
+                <p v-if="licao.entregue" class="card-text">
+                  {{ licao.dataHoraEntrega }}
+                </p>
+                <p v-if="!!licao.dataLiberacao" class="card-text">
+                  Inicia em {{ licao.dataLiberacao }}
+                </p>
+                <p v-if="!!licao.dataEncerramento" class="car-text">
+                  Termina em {{ licao.dataEncerramento }}
+                </p>
+                <router-link v-if="licao.permiteEditar" :to="{ name: 'case-licao', params: { idCase: idCase, idLicao: licao.id }}" class="btn btn-primary">Editar</router-link>
+                <router-link v-else-if="licao.ehProfessor" :to="{ name: 'case-licao', params: { idCase: idCase, idLicao: licao.id }}" class="btn btn-primary">Visualizar</router-link>
+
+                <router-link v-if="licao.permiteAvaliar" :to="{ name: 'case-licao', params: { idCase: idCase, idLicao: licao.id }}" class="btn btn-secondary">Avaliar respostas</router-link>
+
+                <router-link v-if="licao.permiteRealizar && !!licao.idEntregaDeLicao" :to="{ name: 'case-entrega', params: { idCase: idCase, idEntregaDeLicao: licao.idEntregaDeLicao }}" class="btn btn-primary">Realizar</router-link>
+                <button v-else-if="licao.permiteRealizar" @click="gerarEntregaDaLicao(licao.id)" class="btn btn-primary">Realizar</button>
+                
+                <router-link v-if="licao.entregue" :to="{ name: 'case-entrega', params: { idCase: idCase, idEntregaDeLicao: licao.idEntregaDeLicao }}" class="btn btn-secondary">Visualizar</router-link>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { listar } from "@/services/LicaoService";
+import { listar, gerarEntrega } from "@/services/LicaoService";
 export default {
   data() {
     return {
@@ -42,6 +58,20 @@ export default {
     }
   },
   methods: {
+    gerarEntregaDaLicao(idLicao) {
+      const self = this;
+
+      gerarEntrega(self.idCase, idLicao)
+        .then(idEntregaDeLicao => {
+          self.$router.push({
+            name: "case-entrega",
+            params: { idEntregaDeLicao: idEntregaDeLicao }
+          });
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
     carregarDados() {
       const self = this;
       listar(self.idCase).then(response => {

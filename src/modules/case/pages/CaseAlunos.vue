@@ -11,50 +11,15 @@
                 <h5 class="card-title">Alunos</h5>
                 <table class="table table-borderless table-hover">
                     <tbody>
-                        <tr>
+                        <tr v-for="aluno in alunos" :key="aluno.idUsuario">
                             <td>
                                 <i class="fas fa-user-circle" style="font-size: 20px;"></i>
                             </td>
                             <td>
-                                <a href="perfil.html">Letícia de Oliveira</a>
+                                <router-link :to="{ name: 'user', params: { id: aluno.idUsuario }}">{{ aluno.nomeCompleto }}</router-link>
+                                <router-link v-if="!!aluno.idGrupo" class="small" :to="{ name: 'group', params: { id: aluno.idGrupo }}">({{ aluno.nomeGrupo }})</router-link>
                             </td>
                             <td>725</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <i class="fas fa-user-circle" style="font-size: 20px;"></i>
-                            </td>
-                            <td>
-                                <a href="perfil.html">Renan dos Santos Fragaio</a>
-                            </td>
-                            <td>715</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <i class="fas fa-user-circle" style="font-size: 20px;"></i>
-                            </td>
-                            <td>
-                                <a href="perfil.html">Suellen Lima Santos</a>
-                            </td>
-                            <td>710</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <i class="fas fa-user-circle" style="font-size: 20px;"></i>
-                            </td>
-                            <td>
-                                <a href="perfil.html">Luiz Augusto Monteiro Santiago</a>
-                            </td>
-                            <td>620</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <i class="fas fa-user-circle" style="font-size: 20px;"></i>
-                            </td>
-                            <td>
-                                <a href="perfil.html">Alexander de Oliveira Pontes Pires</a>
-                            </td>
-                            <td>590</td>
                         </tr>
                     </tbody>
                 </table>
@@ -62,3 +27,38 @@
         </div>
     </div>
 </template>
+<script>
+import { listarAlunos } from "@/services/CaseService";
+export default {
+  data() {
+    return {
+      idCase: 0,
+      alunos: []
+    };
+  },
+  computed: {
+    totalDeAlunos() {
+      return this.alunos.length;
+    },
+    textoQuantidadeAlunos() {
+      return this.totalDeAlunos > 1
+        ? this.totalDeAlunos + " Alunos"
+        : this.totalDeAlunos == 1
+          ? "1 Aluno"
+          : "Nenhum aluno ainda inscrito";
+    }
+  },
+  methods: {
+    carregarDados() {
+      const self = this;
+      listarAlunos(self.idCase).then(response => {
+        self.alunos = response.data;
+      });
+    }
+  },
+  created() {
+    this.idCase = this.$route.params.id;
+    this.carregarDados();
+  }
+};
+</script>

@@ -5,6 +5,7 @@ import CaseAlunos from '../pages/CaseAlunos';
 import CaseGrupos from '../pages/CaseGrupos';
 import CaseCriterios from '../pages/CaseCriterios';
 import Licao from '../pages/Licao';
+import LicaoEntrega from '../pages/LicaoEntrega';
 
 export default [{
   path: '/case/:id',
@@ -45,6 +46,12 @@ export default [{
   path: '/case/:idCase/licao/:idLicao?',
   name: 'case-licao',
   component: Licao,
+  title: 'Lição',
+  icon: 'fa-comments'
+}, {
+  path: '/case/:idCase/entrega/:idEntregaDeLicao',
+  name: 'case-entrega',
+  component: LicaoEntrega,
   title: 'Lição',
   icon: 'fa-comments'
 }];

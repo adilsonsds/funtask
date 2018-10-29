@@ -33,6 +33,14 @@
                         </ul>
                     </div>
                 </div>
+                <div v-if="permiteEditar" class="card text-center mb-3">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Compartilhe o código abaixo para que seus alunos encontrem seu case de negócio e participem:
+                        </p>
+                        <h3>{{ id }}</h3>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-9 col-md-8">
                 <ul class="nav mb-4" id="list-tab" role="tablist">

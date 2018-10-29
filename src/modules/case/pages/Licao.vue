@@ -104,9 +104,11 @@ export default {
       dataLiberacao: "",
       dataEncerramento: "",
       permiteEntregasForaDoPrazo: false,
+      permiteVisualizar: false,
       permiteEditar: false,
       permiteAvaliar: false,
       permiteRealizar: false,
+      idEntregaDeLicao: null,
       permiteEntregar: false,
       questoes: []
     };
@@ -149,7 +151,6 @@ export default {
         });
       });
     },
-    carregarQuestoes() {},
     carregarDadosDoCase() {
       const self = this;
       obterCase(self.idCase).then(response => {

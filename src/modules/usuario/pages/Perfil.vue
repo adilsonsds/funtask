@@ -8,19 +8,11 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">
-                            Rafael Targino
+                            {{ nomeCompleto }}
                         </h5>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
-                                <i class="fas fa-certificate" style="font-size: 20px;"></i> 2901
-                            </li>
-                            <li class="list-group-item">
-                                <button class="btn btn-success btn-xs">Adicionar ao meu grupo</button>
-                            </li>
-                            <li class="list-group-item">4 grupos</li>
-                            <li class="list-group-item">
-                                <i class="fab fa-facebook-square" style="font-size: 20px;"></i>
-                                <a href="http://facebook.com.br">/rafael.targino</a>
+                                {{ email }}
                             </li>
                         </ul>
                     </div>
@@ -243,3 +235,29 @@
         </div>
     </div>
 </template>
+<script>
+import { obter } from "@/services/UsuarioService";
+export default {
+  data() {
+    return {
+      id: "",
+      nomeCompleto: "",
+      email: ""
+    };
+  },
+  methods: {
+    carregarDados() {
+      const self = this;
+      obter(self.id).then(response => {
+        self.id = response.data.id;
+        self.nomeCompleto = response.data.nomeCompleto;
+        self.email = response.data.email;
+      });
+    }
+  },
+  created() {
+    this.id = this.$route.params.id;
+    this.carregarDados();
+  }
+};
+</script>

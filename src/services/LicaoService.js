@@ -14,3 +14,15 @@ export const salvar = (licao) => {
   else
     return Http.post('cases/' + licao.idCase + '/licoes', licao);
 }
+
+export const gerarEntrega = (idCase, idLicao) => {
+  return Http.post(`cases/${idCase}/licoes/${idLicao}/entregas`);
+}
+
+export const obterEntrega = (idEntrega) => {
+  return Http.get(`entregas/${ idEntrega }`);
+}
+
+export const salvarEntrega = (licao) => {
+  return Http.put(`entregas/${ licao.idEntregaDeLicao }`, licao);
+}

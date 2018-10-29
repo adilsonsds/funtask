@@ -21,7 +21,7 @@
                 </template>
                 <template v-else>
                   <li>
-                    <router-link class="nav-link" :to="{ name: 'user' }">Perfil</router-link>
+                    <router-link class="nav-link" :to="{ name: 'perfil' }">Perfil</router-link>
                   </li>
                   <li>
                     <a href="#!" class="nav-link" @click.prevent="logout">Sair</a>
