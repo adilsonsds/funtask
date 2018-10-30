@@ -26,3 +26,7 @@ export const inscreverAlunoNoCase = (idCaseDeNegocio) => {
 export const listarAlunos = (idCaseDeNegocio) => {
   return Http.get(`cases/${ idCaseDeNegocio }/alunos`);
 }
+
+export const listarGrupos = (idCaseDeNegocio) => {
+  return Http.get(`cases/${ idCaseDeNegocio }/grupos`);
+}

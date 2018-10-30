@@ -1,9 +1,7 @@
 <template>
     <div class="tab-pane fade show active" id="sobre" role="tabpanel">
-        <div class="card">
-            <div class="card-body">
-                {{ texto }}
-            </div>
+        <div class="card mb-3">
+            <pre class="card-body">{{ texto }}</pre>
         </div>
     </div>
 </template>
@@ -14,3 +12,9 @@ export default {
   }
 };
 </script>
+<style>
+pre {
+  overflow: auto;
+  white-space: pre-wrap;
+}
+</style>
