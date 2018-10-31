@@ -47,7 +47,7 @@
 
 <script>
 import { cadastrarUsuario } from "@/services/UsuarioService";
-
+import { Autenticar } from "@/services/AuthService";
 export default {
   data() {
     return {
@@ -64,10 +64,24 @@ export default {
 
       cadastrarUsuario(this.Nome, this.Sobrenome, this.Email, this.Senha)
         .then(response => {
-          self.$router.push({ name: "dashboard" });
+          self.autenticar();
         })
         .catch(mensagem => {
           alert(mensagem || "Preencha os dados corretamente.");
+        });
+    },
+    autenticar() {
+      const self = this;
+      self.$store.dispatch("login");
+      
+      Autenticar(self.Email, self.Senha)
+        .then(res => {
+          self.$store.commit("loginSuccess", res);
+          self.$router.push({ name: "dashboard" });
+        })
+        .catch(error => {
+          self.$store.commit("loginFailed", { error });
+          alert(error);
         });
     }
   }

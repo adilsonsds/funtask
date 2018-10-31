@@ -62,10 +62,10 @@ export default {
       const self = this;
 
       gerarEntrega(self.idCase, idLicao)
-        .then(idEntregaDeLicao => {
+        .then(response => {
           self.$router.push({
             name: "case-entrega",
-            params: { idEntregaDeLicao: idEntregaDeLicao }
+            params: { idEntregaDeLicao: response.data }
           });
         })
         .catch(error => {

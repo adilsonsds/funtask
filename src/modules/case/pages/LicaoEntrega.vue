@@ -16,6 +16,15 @@
                     <h6 v-if="!!dataEncerramento">Termina em: {{ dataEncerramento }}</h6>
                 </div>
             </div>
+            <div class="row">
+              <div class="col">
+                <div class="card">
+                  <div class="card-body">
+                    <pre>{{ textoApresentacao }}</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="row" v-for="(questao, index) in questoes" :key="questao.id">
                 <div class="col">
                     <div class="card border-0">

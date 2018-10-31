@@ -18,7 +18,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-8">
+            <!-- <div class="col-lg-6 col-md-8">
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="badges">
@@ -231,7 +231,7 @@
                         <a href="ver-todos-grupos.html" class="card-link">Ver todos os grupos</a>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>

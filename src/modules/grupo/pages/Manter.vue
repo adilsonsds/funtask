@@ -7,28 +7,30 @@
             </div>
         </div>
         <template v-if="concluiuPrimeiraEtapa" >
-            <div class="row">
-                <div class="col">
-                    <div class="form-group mt-4">
-                        <label for="grupo-nome">Nome do grupo:</label>
-                        <input id="grupo-nome" type="text" class="form-control" v-model="nome" minlength="3" maxlength="100" required>
+            <form @submit.prevent="salvar">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group mt-4">
+                            <label for="grupo-nome">Nome do grupo:</label>
+                            <input id="grupo-nome" type="text" class="form-control" v-model="nomeGrupo" minlength="3" maxlength="100" required>
+                        </div>
+                        <div class="form-group mt-4">
+                            <label for="grupo-descricao">Grito de guerra:</label>
+                            <textarea id="grupo-descricao" class="form-control" rows="2" v-model="gritoDeGuerra" maxlength="1000"></textarea>
+                        </div>
                     </div>
-                    <div class="form-group mt-4">
-                        <label for="grupo-descricao">Grito de guerra:</label>
-                        <textarea id="grupo-descricao" class="form-control" rows="2" v-model="gritoDeGuerra" maxlength="1000"></textarea>
+                </div>
+                <div class="row">            
+                    <div class="col">
+                        <button @click="voltarParaPrimeiraEtapa" type="button" class="btn btn-secondary">
+                            Voltar
+                        </button>
+                    </div>
+                    <div class="col text-right">
+                        <button type="submit" class="btn btn-primary">Salvar</button>
                     </div>
                 </div>
-            </div>
-            <div class="row">            
-                <div class="col">
-                    <button @click="voltarParaPrimeiraEtapa" class="btn btn-secondary">
-                        Voltar
-                    </button>
-                </div>
-                <div class="col text-right">
-                    <button @click="salvar" class="btn btn-primary">Salvar</button>
-                </div>
-            </div>
+            </form>            
         </template>
         <template v-else>
             <div class="row">
@@ -47,8 +49,8 @@
                 <div class="col">
                     <h6>{{ textoQtdDeMembrosAdicionados }}</h6>
                     <div class="d-block">
-                        <button class="btn btn-danger btn-sm mr-2 mb-2" v-for="membro in membrosAdicionados" :key="membro.id" @click="removerMembro(membro)" title="Remover">
-                            {{ membro.nome }} <i class="fas fa-minus-circle"></i>
+                        <button class="btn btn-danger btn-sm mr-2 mb-2" v-for="membro in membrosAdicionados" :key="membro.idUsuario" @click="removerMembro(membro)" title="Remover">
+                            {{ membro.nomeCompleto }} <i class="fas fa-minus-circle"></i>
                         </button>
                     </div>
                 </div>
@@ -56,7 +58,7 @@
             <div class="row">
                 <div class="col">
                     <h4>Resultado da Pesquisa</h4>
-                    <table class="table table-borderless table-hover">
+                    <table v-if="pesquisaDeMembros.length > 0" class="table table-borderless table-hover">
                         <thead>
                             <tr>
                                 <th></th>
@@ -65,11 +67,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="membro in pesquisaDeMembros" :key="membro.id">
+                            <tr v-for="membro in pesquisaDeMembros" :key="membro.idUsuario">
                                 <td>
                                     <i class="fas fa-user-circle" style="font-size: 20px;"></i>
                                 </td>
-                                <td>{{ membro.nome }}</td>
+                                <td>{{ membro.nomeCompleto }}</td>
                                 <td>
                                     <button @click="adicionarMembro(membro)" :disabled="!podeAdicionarMembros" class="btn btn-success btn-sm" title="Adicionar">
                                         <i class="fas fa-plus-circle"></i>
@@ -78,6 +80,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <h6 v-else>Nenhum aluno encontrado</h6>
                 </div>
             </div>
             <div class="row">
@@ -89,25 +92,25 @@
     </div>
 </template>
 <script>
-import { obterPorId } from "@/services/GruposService";
+import {
+  manterGrupo,
+  pesquisarNovosMembros,
+  prepararMontagens
+} from "@/services/GruposService";
 export default {
   data() {
     return {
-      idCase: 3,
-      nomeCase: "Meu case de teste",
-      nome: "",
+      idCase: 0,
+      idGrupo: 0,
+      nomeGrupo: "",
       gritoDeGuerra: "",
       textoPesquisa: "",
-      limiteMembrosPorGrupo: 3,
+      minimoPermitidoDeAlunos: 1,
+      maximoPermitidoDeAlunos: 1,
+      permiteAlterarMembros: false,
       concluiuPrimeiraEtapa: false,
       membrosAdicionados: [],
-      pesquisaDeMembros: [
-        { id: 16, nome: "Adilson" },
-        { id: 15, nome: "Ana" },
-        { id: 14, nome: "Bia" },
-        { id: 11, nome: "Juvenal" },
-        { id: 12, nome: "Chaves" }
-      ]
+      pesquisaDeMembros: []
     };
   },
   computed: {
@@ -125,7 +128,16 @@ export default {
           : "Nenhum membro adicionado";
     },
     podeAdicionarMembros() {
-      return this.limiteMembrosPorGrupo > this.totalMembrosAdicionados;
+      return (
+        this.permiteAlterarMembros &&
+        this.maximoPermitidoDeAlunos > this.totalMembrosAdicionados
+      );
+    },
+    quantidadeDeAlunoEstaValida() {
+      return (
+        this.totalMembrosAdicionados >= this.minimoPermitidoDeAlunos &&
+        this.totalMembrosAdicionados <= this.maximoPermitidoDeAlunos
+      );
     }
   },
   methods: {
@@ -146,25 +158,78 @@ export default {
       this.pesquisaDeMembros.push(membro);
     },
     concluirPrimeiraEtapa() {
-      this.concluiuPrimeiraEtapa = true;
+      if (this.quantidadeDeAlunoEstaValida) this.concluiuPrimeiraEtapa = true;
+      else
+        alert(
+          `A quantidade de alunos deve estar entre ${
+            this.minimoPermitidoDeAlunos
+          } e ${this.maximoPermitidoDeAlunos}.`
+        );
     },
     voltarParaPrimeiraEtapa() {
       this.concluiuPrimeiraEtapa = false;
     },
-    pesquisarMembros() {},
-    salvar() {},
+    pesquisarMembros() {
+      const self = this;
+
+      pesquisarNovosMembros(self.idCase, self.textoPesquisa)
+        .then(response => {
+          self.pesquisaDeMembro = [];
+          response.data.forEach(m => {
+            let membroJaAdicionado = self.membrosAdicionados.find(
+              x => x.idUsuario == m.idUsuario
+            );
+            if (!membroJaAdicionado) self.pesquisaDeMembros.push(m);
+          });
+        })
+        .catch(() => {
+          alert("Nenhum registro encontrado.");
+        });
+    },
+    salvar() {
+      const self = this;
+      let params = {
+        IdGrupo: self.idGrupo,
+        IdCase: self.idCase,
+        Nome: self.nomeGrupo,
+        GritoDeGuerra: self.gritoDeGuerra,
+        IdsAlunosMembros: []
+      };
+
+      self.membrosAdicionados.forEach(m => {
+        params.IdsAlunosMembros.push(m.idAluno);
+      });
+
+      manterGrupo(params)
+        .then(response => {
+          let idGrupo = self.idGrupo || response.data;
+          self.$router.push({
+            name: "grupo",
+            params: { id: idGrupo }
+          });
+        })
+        .catch(error => {
+          alert("Não foi possível salvar as alterações.");
+        });
+    },
     carregarDados() {
       const self = this;
 
-      obterPorId(this.id)
+      prepararMontagens(self.idCase, self.idGrupo)
         .then(response => {
-          self.nome = response.data.nome;
-          response.data.membros.forEach(el => {
-            self.membrosAdicionados.push({
-              idAluno: el.idAluno,
-              nome: el.nomeCompleto
-            });
+          self.idCase = response.data.idCase;
+          self.idGrupo = response.data.idGrupo;
+          self.nomeGrupo = response.data.nomeGrupo;
+          self.gritoDeGuerra = response.data.gritoDeGuerra;
+          self.minimoPermitidoDeAlunos = response.data.minimoPermitidoDeAlunos;
+          self.maximoPermitidoDeAlunos = response.data.maximoPermitidoDeAlunos;
+          self.permiteAlterarMembros = response.data.permiteAlterarMembros;
+
+          response.data.membros.forEach(m => {
+            self.membrosAdicionados.push(m);
           });
+
+          if (self.podeAdicionarMembros) self.pesquisarMembros();
         })
         .catch(error => {
           alert(error);
@@ -172,7 +237,8 @@ export default {
     }
   },
   created() {
-    this.id = this.$route.params.id;
+    this.idGrupo = this.$route.params.id;
+    this.idCase = this.$route.params.idCase;
     this.carregarDados();
   }
 };
