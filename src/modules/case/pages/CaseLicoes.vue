@@ -26,7 +26,7 @@
                 <router-link v-if="licao.permiteEditar" :to="{ name: 'case-licao', params: { idCase: idCase, idLicao: licao.id }}" class="btn btn-primary">Editar</router-link>
                 <router-link v-else-if="licao.ehProfessor" :to="{ name: 'case-licao', params: { idCase: idCase, idLicao: licao.id }}" class="btn btn-primary">Visualizar</router-link>
 
-                <router-link v-if="licao.permiteAvaliar" :to="{ name: 'case-licao', params: { idCase: idCase, idLicao: licao.id }}" class="btn btn-secondary">Avaliar respostas</router-link>
+                <router-link v-if="licao.permiteAvaliar" :to="{ name: 'case-avaliacao', params: { idCase: idCase, idLicao: licao.id }}" class="btn btn-secondary">Avaliar respostas</router-link>
 
                 <router-link v-if="licao.permiteRealizar && !!licao.idEntregaDeLicao" :to="{ name: 'case-entrega', params: { idCase: idCase, idEntregaDeLicao: licao.idEntregaDeLicao }}" class="btn btn-primary">Realizar</router-link>
                 <button v-else-if="licao.permiteRealizar" @click="gerarEntregaDaLicao(licao.id)" class="btn btn-primary">Realizar</button>

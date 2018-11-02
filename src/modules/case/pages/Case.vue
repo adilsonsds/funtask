@@ -38,7 +38,7 @@
                         <p class="card-text">
                             Compartilhe o código abaixo para que seus alunos encontrem seu case de negócio e participem:
                         </p>
-                        <h3>{{ id }}</h3>
+                        <h3>{{ chaveDeBusca }}</h3>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,8 @@ export default {
       permiteMontarGrupos: false,
       textoDeApresentacao: "",
       idProfessor: 0,
-      nomeProfessor: ""
+      nomeProfessor: "",
+      chaveDeBusca: ""
     };
   },
   components: {
@@ -116,6 +117,7 @@ export default {
         self.permiteEditar = response.data.permiteEditar;
         self.inscrito = response.data.inscrito;
         self.permiteSeInscrever = response.data.permiteSeInscrever;
+        self.chaveDeBusca = response.data.chaveDeBusca;
       });
     }
   },

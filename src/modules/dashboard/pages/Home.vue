@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 col-12 mt-3 mb-4">
                 <form @submit.prevent="localizarCase" class="input-group mb-3">                    
-                    <input v-model="idCaseDeNegocioPesquisa" type="number" class="form-control" placeholder="Ir para case de negócio..">
+                    <input v-model="chaveDeBusca" type="text" class="form-control" maxlength="10" required placeholder="Ir para case de negócio..">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit" id="ir-para-case" title="Localizar case de negócio">
                             <i class="fas fa-search"></i>
@@ -59,7 +59,7 @@ import { listarCases, localizar } from "@/services/CaseService";
 export default {
   data() {
     return {
-      idCaseDeNegocioPesquisa: "",
+      chaveDeBusca: "",
       listaDeCasesCriados: []
     };
   },
@@ -89,13 +89,11 @@ export default {
     localizarCase() {
       const self = this;
 
-      if (!self.idCaseDeNegocioPesquisa) {
+      if (!self.chaveDeBusca) {
         alert("Insira um valor para pesquisar.");
-      } else if (isNaN(self.idCaseDeNegocioPesquisa)) {
-        alert("Apenas números são permitidos.");
       }
 
-      localizar(self.idCaseDeNegocioPesquisa)
+      localizar(self.chaveDeBusca)
         .then(response => {
           self.$router.push({ name: "case", params: { id: response.data } });
         })

@@ -15,8 +15,8 @@ export const manterCase = (caseDeNegocio) => {
     return Http.post('cases', caseDeNegocio);
 };
 
-export const localizar = (id) => {
-  return Http.get(`cases/localizar?id=${id}`);
+export const localizar = (key) => {
+  return Http.get(`cases/localizar?key=${key}`);
 }
 
 export const inscreverAlunoNoCase = (idCaseDeNegocio) => {

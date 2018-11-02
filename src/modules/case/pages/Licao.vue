@@ -57,7 +57,7 @@
                     <hr>
                 </div>
             </div>
-            <div class="mt-2 mb-4" v-for="(questao, index) in questoes" :key="questao.id">
+            <div class="mt-2 mb-5" v-for="(questao, index) in questoes" :key="questao.id">
                 <div class="row">
                     <div class="col-1">
                         <h4>#{{ index + 1 }}</h4>
@@ -67,7 +67,7 @@
                             <div class="input-group-prepend">
                                 <div class="input-group-text">Nota</div>
                             </div>
-                            <input v-model="questao.notaMaxima" type="text" class="form-control">
+                            <input v-model="questao.notaMaxima" type="text" class="form-control" required>
                         </div>
                     </div>
                     <div class="col-sm-5 col-3 text-right">
@@ -76,7 +76,13 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <textarea v-model="questao.titulo" class="form-control" rows="10"></textarea>
+                        <textarea v-model="questao.titulo" class="form-control" rows="6" maxlength="5000" required></textarea>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label for="">Gabarito:</label>
+                        <textarea v-model="questao.gabarito" class="form-control" rows="6" maxlength="5000"></textarea>
                     </div>
                 </div>
             </div>
@@ -118,7 +124,8 @@ export default {
       this.questoes.push({
         id: "",
         titulo: "",
-        notaMaxima: 1
+        notaMaxima: 1,
+        gabarito: ""
       });
     },
     excluir() {
@@ -146,7 +153,8 @@ export default {
           self.questoes.push({
             id: q.id,
             titulo: q.titulo,
-            notaMaxima: q.notaMaxima
+            notaMaxima: q.notaMaxima,
+            gabarito: q.gabarito
           });
         });
       });
