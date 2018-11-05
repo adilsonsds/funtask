@@ -5,7 +5,7 @@
           <div class="container">
             <router-link :to="{ name: 'dashboard' }" class="navbar-brand">funtask</router-link>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
           </div>
@@ -21,20 +21,15 @@
                 </template>
                 <template v-else>
                   <li>
-                    <router-link class="nav-link" :to="{ name: 'perfil' }">Perfil</router-link>
+                    <router-link class="nav-link" :to="{ name: 'perfil' }" title="Ir para meu perfil">
+                      <i class="fas fa-user-circle"></i> Perfil
+                    </router-link>
                   </li>
                   <li>
-                    <a href="#!" class="nav-link" @click.prevent="logout">Sair</a>
-                  </li>
-                  <!-- <li class="nav-link dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" aria-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                      {{ usuarioAutenticado.nomeCompleto || 'Adilson' }} <span class="caret"></span>
+                    <a href="#!" class="nav-link" @click.prevent="logout">
+                      <i class="fas fa-sign-out-alt"></i> Sair
                     </a>
-
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <a href="#!" class="dropdown-item" @click.prevent="logout">Sair</a>
-                    </div>
-                  </li> -->
+                  </li>
                 </template>
               </ul>
           </div>

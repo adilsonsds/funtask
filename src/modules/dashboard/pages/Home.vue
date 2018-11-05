@@ -32,7 +32,9 @@
                     </picture>
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="" @click.prevent="abrirModalManterCase">Criar um case de negócio</a>
+                            <router-link :to="{ name: 'case-novo' }">
+                                Criar um Case de Negócio
+                            </router-link>
                         </h5>
                     </div>
                 </div>
