@@ -6,8 +6,6 @@ import router from './router/index';
 import storeData from './store';
 import { initialize } from './helpers/general';
 
-import 'bootstrap/dist/css/bootstrap.css';
-
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
