@@ -16,10 +16,10 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between">
                     <h5>Meus Cases de Negócio</h5>
-                    <button class="btn btn-primary btn-sm" @click.prevent="abrirModalManterCase" title="Criar Case de Negócio">
+                    <router-link :to="{ name: 'case-novo' }" class="btn btn-primary btn-sm" title="Criar Case de Negócio">
                         <i class="fas fa-plus-circle"></i>
                         Criar um Case de Negócio
-                    </button>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -50,8 +50,6 @@
                 </div>
             </div>  
         </div>
-
-        <modal-manter-case idModal="manter-case"></modal-manter-case>
     </main>
 </template>
 <script>
@@ -63,22 +61,12 @@ export default {
       listaDeCasesCriados: []
     };
   },
-  components: {
-    "modal-manter-case": () =>
-      import("@/modules/case/components/ModalManterCase")
-  },
   computed: {
     possuiCaseDeNegocio() {
       return this.listaDeCasesCriados && this.listaDeCasesCriados.length > 0;
     }
   },
   methods: {
-    abrirModalManterCase() {
-      const self = this;
-      self.$root.$emit("abrir-modal", {
-        idModal: "manter-case"
-      });
-    },
     carregarCases() {
       const self = this;
 

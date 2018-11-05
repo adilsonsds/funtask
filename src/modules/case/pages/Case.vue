@@ -11,13 +11,13 @@
                             {{ nome }}
                         </h5>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
+                            <!-- <li class="list-group-item">
                                 <i class="fas fa-star" style="font-size: 15px;"></i>
                                 <i class="fas fa-star" style="font-size: 15px;"></i>
                                 <i class="fas fa-star" style="font-size: 15px;"></i>
                                 <i class="fas fa-star" style="font-size: 15px;"></i>
                                 <i class="fas fa-star-half-alt" style="font-size: 15px;"></i>
-                            </li>
+                            </li> -->
                             <li v-if="permiteSeInscrever" class="list-group-item">
                                 <button @click.prevent="inscreverNoCase" type="button" class="btn btn-success btn-xs">Inscreve-se</button>
                             </li>
@@ -25,7 +25,9 @@
                                 Inscrito
                             </li>
                             <li v-if="permiteEditar" class="list-group-item">
-                                <button @click.prevent="abrirModalManterCase" type="button" class="btn btn-primary btn-xs">Editar</button>
+                                <router-link :to="{ name: 'case-editar', params: { id: id } }" class="btn btn-primary btn-xs">
+                                    Editar
+                                </router-link>
                             </li>
                             <li class="list-group-item">Por
                                 <router-link :to="{ name: 'user', params: { id: idProfessor } }">{{ nomeProfessor }}</router-link>
@@ -57,13 +59,12 @@
                         <router-link :to="{ name: 'case-grupos' }" class="nav-link">Grupos</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{ name: 'case-criterios' }" class="nav-link">Critérios</router-link>
+                        <router-link :to="{ name: 'case-trofeus' }" class="nav-link">Troféus</router-link>
                     </li>
                 </ul>
                 <router-view :texto="textoDeApresentacao"></router-view>
             </div>
         </div>
-        <modal-manter-case idModal="manter-case"></modal-manter-case>
     </div>
 </template>
 <script>
@@ -82,10 +83,6 @@ export default {
       nomeProfessor: "",
       chaveDeBusca: ""
     };
-  },
-  components: {
-    "modal-manter-case": () =>
-      import("@/modules/case/components/ModalManterCase")
   },
   methods: {
     abrirModalManterCase() {
@@ -122,13 +119,8 @@ export default {
     }
   },
   created() {
-    const self = this;
-    self.id = self.$route.params.id;
-    self.carregarDados();
-
-    self.$root.$on("case-salvo", () => {
-      self.carregarDados();
-    });
+    this.id = this.$route.params.id;
+    this.carregarDados();
   }
 };
 </script>

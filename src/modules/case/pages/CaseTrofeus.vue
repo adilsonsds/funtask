@@ -5,7 +5,9 @@
                 <h3>{{ tituloTela }}</h3>
             </div>
             <div class="col-lg-4 col-md-6 text-right">
-                <button @click.prevent="abrirModalManterTrofeu" class="btn btn-primary">Novo troféu</button>
+                <router-link class="btn btn-primary" :to="{ name: 'trofeu-novo', params: { idCase: idCase } }">
+                  Novo troféu
+                </router-link>
             </div>
         </div>
         <div class="row">
@@ -16,16 +18,17 @@
                     </picture>
                     <div class="card-body">
                         <h5 class="card-title">{{ trofeu.nome }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted"> Pontos: {{ trofeu.pontos }} </h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Pontos: {{ trofeu.pontos }} </h6>
                         <p class="card-text">
                             {{ trofeu.descricao }}
                         </p>
-                        <button class="btn btn-primary btn-sm" @click="abrirModalManterTrofeu(trofeu.id)">Editar</button>
+                        <router-link class="btn btn-primary btn-sm" :to="{ name: 'trofeu-editar', params: { idCase: idCase, id: trofeu.id }}">
+                          Editar
+                        </router-link>
                     </div>
                 </div>
             </div>
         </div>
-        <modal-manter-trofeu idModal="manter-trofeu"></modal-manter-trofeu>
     </div>
 </template>
 <script>
@@ -36,10 +39,6 @@ export default {
       idCase: 0,
       listaDeTrofeus: []
     };
-  },
-  components: {
-    "modal-manter-trofeu": () =>
-      import("@/modules/case/components/ModalManterTrofeu")
   },
   computed: {
     totalDeTrofeus() {
@@ -54,14 +53,6 @@ export default {
     }
   },
   methods: {
-    abrirModalManterTrofeu(idTrofeu) {
-      const self = this;
-      self.$root.$emit("abrir-modal", {
-        idModal: "manter-trofeu",
-        idCase: self.idCase,
-        idTrofeu: idTrofeu
-      });
-    },
     carregarTrofeus() {
       const self = this;
       listar(self.idCase).then(response => {
@@ -70,13 +61,8 @@ export default {
     }
   },
   created() {
-    const self = this;
-    self.idCase = self.$route.params.id;
-    self.carregarTrofeus();
-
-    self.$root.$on("trofeu-alterado", () => {
-      self.carregarTrofeus();
-    });
+    this.idCase = this.$route.params.id;
+    this.carregarTrofeus();
   }
 };
 </script>
