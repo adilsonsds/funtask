@@ -72,7 +72,7 @@ export default {
         .then(response => {
           self.$router.push({
             name: "case-trofeus",
-            params: { id: self.idCase }
+            params: { id: self.id || self.idCase }
           });
         })
         .catch(() => {

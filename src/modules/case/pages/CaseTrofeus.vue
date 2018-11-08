@@ -4,7 +4,7 @@
             <div class="col-lg-8 col-md-6">
                 <h3>{{ tituloTela }}</h3>
             </div>
-            <div class="col-lg-4 col-md-6 text-right">
+            <div class="col-lg-4 col-md-6 text-right" v-if="permiteCriarTrofeus">
                 <router-link class="btn btn-primary" :to="{ name: 'trofeu-novo', params: { idCase: idCase } }">
                   Novo troféu
                 </router-link>
@@ -34,6 +34,9 @@
 <script>
 import { listar } from "@/services/TrofeuService";
 export default {
+  props: {
+    permiteCriarTrofeus: false
+  },
   data() {
     return {
       idCase: 0,

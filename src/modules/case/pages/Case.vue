@@ -62,7 +62,12 @@
                         <router-link :to="{ name: 'case-trofeus' }" class="nav-link">Troféus</router-link>
                     </li>
                 </ul>
-                <router-view :texto="textoDeApresentacao"></router-view>
+                <router-view 
+                    :texto="textoDeApresentacao"
+                    :permiteCriarNovoGrupo="permiteCriarNovoGrupo"
+                    :permiteCriarLicoes="permiteCriarLicoes"
+                    :permiteCriarTrofeus="permiteCriarTrofeus"
+                ></router-view>
             </div>
         </div>
     </div>
@@ -81,7 +86,10 @@ export default {
       textoDeApresentacao: "",
       idProfessor: 0,
       nomeProfessor: "",
-      chaveDeBusca: ""
+      chaveDeBusca: "",
+      permiteCriarNovoGrupo: false,
+      permiteCriarLicoes: false,
+      permiteCriarTrofeus: false
     };
   },
   methods: {
@@ -115,6 +123,9 @@ export default {
         self.inscrito = response.data.inscrito;
         self.permiteSeInscrever = response.data.permiteSeInscrever;
         self.chaveDeBusca = response.data.chaveDeBusca;
+        self.permiteCriarNovoGrupo = response.data.permiteCriarNovoGrupo;
+        self.permiteCriarLicoes = response.data.permiteCriarLicoes;
+        self.permiteCriarTrofeus = response.data.permiteCriarTrofeus;
       });
     }
   },

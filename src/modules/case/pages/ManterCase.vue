@@ -95,7 +95,7 @@ export default {
         .then(response => {
           self.$router.push({
             name: "case-home",
-            params: { id: response.data }
+            params: { id: self.id || response.data }
           });
         })
         .catch(() => {

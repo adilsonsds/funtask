@@ -1,6 +1,6 @@
 <template>    
     <div class="tab-pane fade show active" id="grupos" role="tabpanel">
-        <div class="row">
+        <div class="row" v-if="permiteCriarNovoGrupo">
             <div class="col text-right">
                 <router-link :to="{ name: 'grupo-novo', params: { idCase: idCase }}" role="button" class="btn btn-primary">
                     <i class="fas fa-plus-circle"></i>
@@ -41,6 +41,9 @@
 <script>
 import { listarGrupos } from "@/services/CaseService";
 export default {
+  props: {
+    permiteCriarNovoGrupo: false
+  },
   data() {
     return {
       idCase: 0,

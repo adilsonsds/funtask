@@ -4,7 +4,7 @@
             <div class="col-lg-8 col-md-6">
                 <h3>{{ tituloTela }}</h3>
             </div>
-            <div class="col-lg-4 col-md-6 text-right">
+            <div class="col-lg-4 col-md-6 text-right" v-if="permiteCriarLicoes">
                 <router-link :to="{ name: 'case-licao', params: { idCase: idCase } }" class="btn btn-primary">Nova lição</router-link>
             </div>
         </div>
@@ -39,6 +39,9 @@
 <script>
 import { listar, gerarEntrega } from "@/services/LicaoService";
 export default {
+  props: {
+    permiteCriarLicoes: false
+  },
   data() {
     return {
       idCase: 0,
