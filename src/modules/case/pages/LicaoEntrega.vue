@@ -43,6 +43,12 @@
                             <textarea v-else v-model="questao.resposta" class="form-control" rows="6"></textarea>
                         </div>
                     </div>
+                    <div class="card border-0" v-if="!isNaN(questao.pontosGanhos)">
+                        <div class="card-body pt-0">
+                            <h5 class="card-title">Avaliacao</h5>
+                            <p class="card-text">{{ questao.pontosGanhos }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row mb-2">

@@ -26,3 +26,15 @@ export const obterEntrega = (idEntrega) => {
 export const salvarEntrega = (licao) => {
   return Http.put(`entregas/${ licao.idEntregaDeLicao }`, licao);
 }
+
+export const prepararAvaliacao = (idLicao) => {
+  return Http.get(`avaliacoes/${idLicao}`);
+}
+
+export const filtrarQuestoes = (idLicao, idQuestao, removerQuestoesJaAvaliadas) => {
+  return Http.get(`avaliacoes/${idLicao}/questoes?idQuestao=${idQuestao}&removerJaAvaliadas=${removerQuestoesJaAvaliadas}`);
+}
+
+export const atribuirNota = (request) => {
+  return Http.put(`avaliacoes/nota`, request);
+}

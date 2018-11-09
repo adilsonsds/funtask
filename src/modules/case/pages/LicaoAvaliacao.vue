@@ -1,17 +1,10 @@
 <template>
     <div class="container">
-        <form @submit.prevent="salvar">
+        <form @submit.prevent="filtrarQuestoes" class="mb-3">
             <div class="row mb-2">
                 <div class="col">
-                    <router-link class="h3 d-block mb-3" :to="{ name: 'case-licoes', params: { id: idCase }}" >{{ nomeCase }}</router-link>
+                    <!-- <router-link class="h3 d-block mb-3" :to="{ name: 'case-licoes', params: { id: idCase }}" >{{ nomeCase }}</router-link> -->
                     <h5>Lição: {{ titulo }}</h5>
-                    <h6>Responsáveis: 
-                      <ul v-for="responsavel in responsaveis" :key="responsavel.idUsuario">
-                        <li>
-                          <router-link :to="{ name: 'user', params: { id: responsavel.idUsuario }}">{{ responsavel.nome }}</router-link>
-                        </li>
-                      </ul>
-                    </h6>
                     <h6 v-if="!!dataLiberacao">Liberada em: {{ dataLiberacao }}</h6>
                     <h6 v-if="!!dataEncerramento">Termina em: {{ dataEncerramento }}</h6>
                 </div>
@@ -25,60 +18,70 @@
                 </div>
               </div>
             </div>
-            <div class="row" v-for="(questao, index) in questoes" :key="questao.id">
-                <div class="col">
-                    <div class="card border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">Questão {{ index + 1 }} de {{ $root.totalDeQuestoes }}</h5>
-                            <h6 class="card-subtitle">Pontuação: {{ questao.notaMaxima }}</h6>
-                            <p class="card-text">
-                                {{ questao.titulo }}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="card border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">Resposta</h5>
-                            <span v-if="entregue">{{ questao.resposta }}</span>
-                            <textarea v-else v-model="questao.resposta" class="form-control" rows="6"></textarea>
-                        </div>
+            <div class="form-row mt-2">
+                <div class="form-group col-lg-6 col-md-12">
+                    <label for="filtro-numero-questao">Número da Questão:</label>
+                    <select id="filtro-numero-questao" class="form-control" v-model="filtro.idQuestao" required>
+                        <option v-for="(questao, index) in questoes" :key="questao.idQuestao" v-bind:value="questao.idQuestao">{{ index + 1 }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row mt-2">
+                <div class="form-group col-lg-6 col-md-6">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" v-model="filtro.removerQuestoesJaAvaliadas" class="custom-control-input" id="filtro-questoes-respondidas">
+                      <label class="custom-control-label" for="filtro-questoes-respondidas">Remover questões que já foram avalidas</label>
                     </div>
                 </div>
             </div>
-            <div class="row mb-2">
+            <div class="form-row">
               <div class="col text-right">
-                <router-link v-if="entregue" class="btn btn-success" :to="{ name: 'case-licoes', params: { id: idCase }}" >Finalizar revisão</router-link>
-                <button v-if="!entregue" @click.prevent="salvar" class="btn btn-secondary">Salvar rascunho</button>
-                <button v-if="!entregue" @click.prevent="entregar" class="btn btn-primary">Entregar lição</button>
+                <button type="submit" class="btn btn-success">Filtrar</button>
               </div>
             </div>
+        </form>
+        <form v-for="resposta in respostas" :key="resposta.idResposta" @submit.prevent="atribuirPontuacao(resposta)">  
+          <div class="row mt-2">
+            <div class="col">
+              <h3>Resposta</h3>
+              <pre>{{ resposta.resposta }}</pre>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <label class="sr-only" v-bind:for="'nota-resposta-'+resposta.idResposta">Nota</label>
+            <div class="input-group mb-2 mr-sm-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Nota</div>
+              </div>
+              <input type="number" class="form-control" v-model="resposta.pontos" v-bind:id="'nota-resposta-'+resposta.idResposta" maxlength="10" required>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Salvar</button>
+          </div>
         </form>
     </div>
 </template>
 
 <script>
-import { obterEntrega, salvarEntrega } from "@/services/LicaoService";
-
+import {
+  prepararAvaliacao,
+  filtrarQuestoes,
+  atribuirNota
+} from "@/services/LicaoService";
 export default {
   data() {
     return {
-      idEntregaDeLicao: 0,
       idCase: 0,
-      nomeCase: "",
+      idLicao: 0,
+      filtro: {
+        idQuestao: 1,
+        removerQuestoesJaAvaliadas: true
+      },
       titulo: "",
       textoApresentacao: "",
-      descricao: "",
-      formaDeEntrega: 0,
       dataLiberacao: "",
       dataEncerramento: "",
-      permiteEntregasForaDoPrazo: false,
-      permiteEditar: false,
-      permiteAvaliar: false,
-      permiteRealizar: false,
-      permiteEntregar: false,
-      entregue: true,
       questoes: [],
-      responsaveis: []
+      respostas: []
     };
   },
   computed: {
@@ -89,85 +92,60 @@ export default {
   methods: {
     carregarDados() {
       const self = this;
-      obterEntrega(self.idEntregaDeLicao).then(response => {
-        self.idCase = response.data.idCase;
-        self.nomeCase = response.data.nomeCase;
-        self.titulo = response.data.titulo;
-        self.textoApresentacao = response.data.textoApresentacao;
-        self.descricao = response.data.descricao;
-        self.formaDeEntrega = response.data.formaDeEntrega;
-        self.dataLiberacao = response.data.dataLiberacao;
-        self.dataEncerramento = response.data.dataEncerramento;
-        self.permiteEntregasForaDoPrazo =
-          response.data.permiteEntregasForaDoPrazo;
-        self.permiteEditar = response.data.permiteEditar;
-        self.permiteAvaliar = response.data.permiteAvaliar;
-        self.permiteRealizar = response.data.permiteRealizar;
-        self.permiteEntregar = response.data.permiteEntregar;
-        self.entregue = response.data.entregue;
-        response.data.questoes.forEach(q => {
-          self.questoes.push({
-            id: q.id,
-            titulo: q.titulo,
-            notaMaxima: q.notaMaxima,
-            resposta: q.resposta,
-            pontosGanhos: q.pontosGanhos
+      prepararAvaliacao(self.idLicao)
+        .then(response => {
+          self.titulo = response.data.titulo;
+          self.textoApresentacao = response.data.textoApresentacao;
+          self.dataLiberacao = response.data.dataLiberacao;
+          self.dataEncerramento = response.data.dataEncerramento;
+          response.data.questoes.forEach(q => {
+            self.questoes.push({
+              idQuestao: q.idQuestao,
+              titulo: q.titulo,
+              notaMaxima: q.notaMaxima
+            });
           });
-        });
-        response.data.responsaveis.forEach(r => {
-          self.responsaveis.push({
-            idUsuario: r.idUsuario,
-            nome: r.nome
+        })
+        .catch(() => {});
+    },
+    filtrarQuestoes() {
+      const self = this;
+
+      filtrarQuestoes(
+        self.idLicao,
+        self.filtro.idQuestao,
+        self.filtro.removerQuestoesJaAvaliadas
+      ).then(response => {
+        self.respostas = [];
+        response.data.forEach(q => {
+          self.respostas.push({
+            idResposta: q.idResposta,
+            resposta: q.resposta,
+            idQuestao: q.idQuestao,
+            dataHoraEntrega: q.dataHoraEntrega,
+            idGrupo: q.idGrupo,
+            pontos: ""
           });
         });
       });
     },
-    salvar() {
+    atribuirPontuacao(resposta) {
       const self = this;
 
-      let request = {
-        idEntregaDeLicao: self.idEntregaDeLicao,
-        status: 0,
-        questoes: self.questoes
-      };
-      salvarEntrega(request)
-        .then(response => {
-          alert("Rascunho salvo com sucesso.");
+      atribuirNota(resposta)
+        .then(() => {
+          alert("Nota atribuída com sucesso.");
         })
         .catch(() => {
-          alert("Erro ao salvar.");
+          alert("Erro ao atribuir nota.");
         });
-    },
-    entregar() {
-      let msgConfirmacao =
-        "As respostas inseridas não poderão ser alteradas após realizar a entrega. Confirma esta ação?";
-
-      if (confirm(msgConfirmacao)) {
-        const self = this;
-
-        let request = {
-          idEntregaDeLicao: self.idEntregaDeLicao,
-          status: 1,
-          questoes: self.questoes
-        };
-
-        salvarEntrega(request)
-          .then(response => {
-            self.$router.push({
-              name: "case-licoes",
-              params: { id: self.idCase }
-            });
-          })
-          .catch(() => {
-            alert("Erro ao salvar.");
-          });
-      }
     }
   },
   created() {
-    this.idEntregaDeLicao = this.$route.params.idEntregaDeLicao;
+    this.idCase = this.$route.params.idCase;
+    this.idLicao = this.$route.params.idLicao;
 
-    if (this.idEntregaDeLicao > 0) {
+    if (this.idCase > 0 && this.idLicao > 0) {
       this.carregarDados();
     }
   }
