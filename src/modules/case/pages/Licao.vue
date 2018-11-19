@@ -79,12 +79,12 @@
                         <textarea v-model="questao.titulo" class="form-control" rows="6" maxlength="5000" required></textarea>
                     </div>
                 </div>
-                <div class="row mt-2">
+                <!-- <div class="row mt-2">
                     <div class="col-12">
                         <label for="">Gabarito:</label>
                         <textarea v-model="questao.gabarito" class="form-control" rows="6" maxlength="5000"></textarea>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="d-block mt-2 mb-5">
                 <button @click.prevent="adicionarQuestao" class="btn btn-primary">Adicionar questão</button>

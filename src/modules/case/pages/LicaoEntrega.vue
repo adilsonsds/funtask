@@ -12,8 +12,8 @@
                         </li>
                       </ul>
                     </h6>
-                    <h6 v-if="!!dataLiberacao">Liberada em: {{ dataLiberacao }}</h6>
-                    <h6 v-if="!!dataEncerramento">Termina em: {{ dataEncerramento }}</h6>
+                    <h6 v-if="!!dataLiberacao">Liberação em: {{ dataLiberacao | dataHora }}</h6>
+                    <h6 v-if="!!dataEncerramento">Encerramento em: {{ dataEncerramento | dataHora }}</h6>
                 </div>
             </div>
             <div class="row">
@@ -23,13 +23,14 @@
                     <pre>{{ textoApresentacao }}</pre>
                   </div>
                 </div>
+                <hr>
               </div>
             </div>
             <div class="row" v-for="(questao, index) in questoes" :key="questao.id">
                 <div class="col">
                     <div class="card border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">Questão {{ index + 1 }} de {{ $root.totalDeQuestoes }}</h5>
+                        <div class="card-body py-2">
+                            <h5 class="card-title">Questão {{ index + 1 }} de {{ totalDeQuestoes }}</h5>
                             <h6 class="card-subtitle">Pontuação: {{ questao.notaMaxima }}</h6>
                             <p class="card-text">
                                 {{ questao.titulo }}
@@ -37,19 +38,36 @@
                         </div>
                     </div>
                     <div class="card border-0">
-                        <div class="card-body">
+                        <div class="card-body py-2">
                             <h5 class="card-title">Resposta</h5>
                             <span v-if="entregue">{{ questao.resposta }}</span>
                             <textarea v-else v-model="questao.resposta" class="form-control" rows="6"></textarea>
                         </div>
                     </div>
-                    <div class="card border-0" v-if="!isNaN(questao.pontosGanhos)">
-                        <div class="card-body pt-0">
-                            <h5 class="card-title">Avaliacao</h5>
-                            <p class="card-text">{{ questao.pontosGanhos }}</p>
-                        </div>
+                    <div class="card border-0" v-if="questao.permiteVisualizarAvaliacao">
+                        <div class="card-body py-2">
+                            <h5 class="card-title">Avaliação: <span class="small">{{questao.pontosGanhos}} pontos</span></h5>
+                        </div>                        
                     </div>
-                </div>
+                    <div v-if="questao.trofeus" class="row">
+                      <div class="col-lg-3 col-md-4 col-sm-6 text-center" v-for="trofeu in questao.trofeus" :key="trofeu.idTrofeu">
+                        <div class="card mb-3">
+                          <picture class="card-img-top py-2">
+                              <i class="fas fa-trophy" style="font-size:40px;"></i>
+                          </picture>
+                          <div class="card-body py-2">
+                              <h5 class="card-title">
+                                  {{ trofeu.nomeTrofeu }}
+                              </h5>
+                              <p class="card-text">
+                                {{ trofeu.pontosMovimentados > 0 ? 'Ganhou':'Perdeu' }} {{ trofeu.pontosMovimentados }} pontos
+                              </p>
+                          </div>
+                        </div>
+                      </div>  
+                    </div>
+                <hr>
+              </div>
             </div>
             <div class="row mb-2">
               <div class="col text-right">
@@ -87,6 +105,11 @@ export default {
       responsaveis: []
     };
   },
+  filters: {
+    dataHora(data) {
+      return data ? new Date(data).toLocaleString("pt-BR") : "";
+    }
+  },
   computed: {
     totalDeQuestoes() {
       return this.questoes ? this.questoes.length : 0;
@@ -117,7 +140,9 @@ export default {
             titulo: q.titulo,
             notaMaxima: q.notaMaxima,
             resposta: q.resposta,
-            pontosGanhos: q.pontosGanhos
+            pontosGanhos: q.pontosGanhos,
+            permiteVisualizarAvaliacao: q.permiteVisualizarAvaliacao,
+            trofeus: q.trofeus
           });
         });
         response.data.responsaveis.forEach(r => {

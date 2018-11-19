@@ -14,3 +14,7 @@ export const salvar = (trofeu) => {
   else
     return Http.post('cases/' + trofeu.idCase + '/trofeus', trofeu);
 }
+
+export const atribuirTrofeu = (request) => {debugger;
+  return Http.post('entregas/trofeus', request);
+}

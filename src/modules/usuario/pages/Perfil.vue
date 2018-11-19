@@ -17,235 +17,134 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            <!-- <div class="col-lg-6 col-md-8">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="badges">
-                            <div class="badges__item">
-                                <i class="fas fa-trophy" style="font-size: 70px;"></i>
-                                <span class="text-center">Melhor resposta</span>
-                            </div>
-                            <div class="badges__item">
-                                <i class="fas fa-trophy" style="font-size: 70px;"></i>
-                                <span class="text-center">Melhor resposta</span>
-                            </div>
-                            <div class="badges__item">
-                                <i class="fas fa-trophy" style="font-size: 70px;"></i>
-                                <span class="text-center">Melhor resposta</span>
-                            </div>
-                            <div class="badges__item">
-                                <i class="fas fa-trophy" style="font-size: 70px;"></i>
-                                <span class="text-center">Melhor resposta</span>
+            </div> 
+            <div class="col-lg-9 col-md-8">
+                <div v-if="trofeus" class="row">
+                    <div class="col-lg-4 col-md-6 text-center" v-for="trofeu in trofeus" :key="trofeu.idEntrega">
+                        <div class="card mb-3 border-0">
+                            <picture class="card-img-top img-fluid">
+                                <i class="fas fa-trophy" style="font-size:60px;"></i>
+                            </picture>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ trofeu.nomeTrofeu }}</h5>
+                                <p class="card-text">
+                                    {{ trofeu.pontosMovimentados > 0 ? 'Ganhou':'Perdeu' }} {{ Math.abs(trofeu.pontosMovimentados) }} pontos
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-user-circle" style="font-size: 30px;"></i>
-                            Rafael Targino
-                        </h5>
-                        <h6 class="card-subtitle mb-3 text-muted">30 minutos atrás</h6>
-                        <p class="card-text">
-                            Ganhou um troféu de Melhor Resposta em
-                            <a href="case.html">Jogo Engenharia de Software</a>.
-                        </p>
+                <div class="row">
+                    <div class="col">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Cases de Negócio</h5>
+                                <table class="table table-borderless table-hover">
+                                    <tbody>
+                                        <tr v-for="caseDeNegocio in casesDeNegocios" :key="caseDeNegocio.id">
+                                            <td>
+                                                <i class="fab fa-fort-awesome-alt" style="font-size: 20px;"></i>
+                                            </td>
+                                            <td>
+                                                <router-link :to="{ name: 'case', params: { id: caseDeNegocio.id }}">{{ caseDeNegocio.nome }}</router-link>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-user-circle" style="font-size: 30px;"></i>
-                            Rafael Targino
-                        </h5>
-                        <h6 class="card-subtitle mb-3 text-muted">30 minutos atrás</h6>
-                        <p class="card-text">
-                            Entrou no grupo
-                            <a href="grupo.html">Vingadores</a>.
-                        </p>
+                <div v-if="grupos" class="row">
+                    <div class="col">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Grupos</h5>
+                                <table class="table table-borderless table-hover">
+                                    <tbody>
+                                        <tr v-for="grupo in grupos" :key="grupo.id">
+                                            <td>
+                                                <i class="fas fa-users" style="font-size: 20px;"></i>
+                                            </td>
+                                            <td>
+                                                <router-link :to="{ name: 'grupo', params: { id: grupo.id }}">{{ grupo.nome }}</router-link><br>
+                                                <router-link class="small" :to="{ name: 'case', params: { id: grupo.idCase }}">({{ grupo.nomeCase }})</router-link>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-user-circle" style="font-size: 30px;"></i>
-                            Rafael Targino
-                        </h5>
-                        <h6 class="card-subtitle mb-3 text-muted">30 minutos atrás</h6>
-                        <p class="card-text">
-                            Criou o case de negócio
-                            <a href="case.html">Jogo Engenharia de Software</a>.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-user-circle" style="font-size: 30px;"></i>
-                            Rafael Targino
-                        </h5>
-                        <h6 class="card-subtitle mb-3 text-muted">30 minutos atrás</h6>
-                        <p class="card-text">
-                            Entrou no grupo
-                            <a href="grupo.html">Vingadores</a>.
-                        </p>
-                    </div>
-                </div>
-
             </div>
-            <div class="col-lg-3">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Ranking</h5>
-                        <table class="table table-borderless table-hover">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">C++</a>
-                                    </td>
-                                    <td>725</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">Scorpion</a>
-                                    </td>
-                                    <td>715</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">Mortal Combat</a>
-                                    </td>
-                                    <td>710</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">LTM's</a>
-                                    </td>
-                                    <td>620</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">Business Group</a>
-                                    </td>
-                                    <td>590</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">Soft Team</a>
-                                    </td>
-                                    <td>540</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                        <a href="ver-todos-grupos.html" class="card-link">Ver todos os grupos</a>
-                    </div>
-                </div>
-
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Meus grupos</h5>
-                        <table class="table table-borderless table-hover">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">C++</a>
-                                    </td>
-                                    <td>725</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">Scorpion</a>
-                                    </td>
-                                    <td>715</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">Mortal Combat</a>
-                                    </td>
-                                    <td>710</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">LTM's</a>
-                                    </td>
-                                    <td>620</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">Business Group</a>
-                                    </td>
-                                    <td>590</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <i class="fab fa-steam" style="font-size: 20px;"></i>
-                                    </td>
-                                    <td>
-                                        <a href="grupo.html">Soft Team</a>
-                                    </td>
-                                    <td>540</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                        <a href="ver-todos-grupos.html" class="card-link">Ver todos os grupos</a>
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
 </template>
 <script>
-import { obter } from "@/services/UsuarioService";
+import {
+  obter,
+  listarCases,
+  listarGrupos,
+  listarTrofeus
+} from "@/services/UsuarioService";
 export default {
   data() {
     return {
       id: "",
       nomeCompleto: "",
-      email: ""
+      email: "",
+      casesDeNegocios: [],
+      trofeus: [],
+      grupos: []
     };
   },
   methods: {
+    carregarGrupos() {
+      const self = this;
+
+      listarGrupos(self.id).then(response => {
+        response.data.forEach(g => {
+          self.grupos.push({
+            id: g.id,
+            nome: g.nome,
+            idCase: g.caseDeNegocio.id,
+            nomeCase: g.caseDeNegocio.nome
+          });
+        });
+      });
+    },
+    carregarTrofeus() {
+      const self = this;
+
+      listarTrofeus(self.id).then(response => {
+        response.data.forEach(t => {
+          self.trofeus.push({
+            idEntrega: t.idEntrega,
+            idTrofeu: t.idTrofeu,
+            nomeTrofeu: t.nomeTrofeu,
+            pontosMovimentados: t.pontosMovimentados
+          });
+        });
+      });
+    },
+    carregarCases() {
+      const self = this;
+
+      listarCases(self.id).then(response => {
+        response.data.forEach(c => {
+          self.casesDeNegocios.push({
+            id: c.id,
+            nome: c.nome
+          });
+        });
+
+        if (self.casesDeNegocios.length > 0) {
+          self.carregarTrofeus();
+          self.carregarGrupos();
+        }
+      });
+    },
     carregarDados() {
       const self = this;
       obter(self.id).then(response => {
@@ -253,6 +152,8 @@ export default {
         self.nomeCompleto = response.data.nomeCompleto;
         self.email = response.data.email;
       });
+
+      self.carregarCases();
     }
   },
   created() {

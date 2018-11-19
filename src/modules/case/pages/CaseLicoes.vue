@@ -15,13 +15,13 @@
                     {{ licao.descricao }}
                 </p>
                 <p v-if="licao.entregue" class="card-text">
-                  {{ licao.dataHoraEntrega }}
+                  {{ licao.dataHoraEntrega | dataHora }}
                 </p>
                 <p v-if="!!licao.dataLiberacao" class="card-text">
-                  Inicia em {{ licao.dataLiberacao }}
+                 Liberação em {{ licao.dataLiberacao | dataHora }}
                 </p>
                 <p v-if="!!licao.dataEncerramento" class="car-text">
-                  Termina em {{ licao.dataEncerramento }}
+                  Encerramento em {{ licao.dataEncerramento | dataHora }}
                 </p>
                 <router-link v-if="licao.permiteEditar" :to="{ name: 'case-licao', params: { idCase: idCase, idLicao: licao.id }}" class="btn btn-primary">Editar</router-link>
                 <router-link v-else-if="licao.ehProfessor" :to="{ name: 'case-licao', params: { idCase: idCase, idLicao: licao.id }}" class="btn btn-primary">Visualizar</router-link>
@@ -47,6 +47,11 @@ export default {
       idCase: 0,
       licoes: []
     };
+  },
+  filters: {
+    dataHora(data) {
+      return data ? new Date(data).toLocaleString("pt-BR") : "";
+    }
   },
   computed: {
     totalDeLicoes() {

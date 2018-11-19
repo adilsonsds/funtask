@@ -22,7 +22,7 @@
                         <p class="card-text">
                             {{ trofeu.descricao }}
                         </p>
-                        <router-link class="btn btn-primary btn-sm" :to="{ name: 'trofeu-editar', params: { idCase: idCase, id: trofeu.id }}">
+                        <router-link v-if="permiteCriarTrofeus" class="btn btn-primary btn-sm" :to="{ name: 'trofeu-editar', params: { idCase: idCase, id: trofeu.id }}">
                           Editar
                         </router-link>
                     </div>

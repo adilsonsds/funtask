@@ -21,3 +21,7 @@ export const manterGrupo = (grupo) => {
   else
     return Http.post('grupos', grupo);
 }
+
+export const listarTrofeus = (idGrupo) => {
+  return Http.get(`grupos/${idGrupo}/trofeus`);
+}

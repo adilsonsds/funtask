@@ -2,10 +2,10 @@
     <div class="container">
         <div class="row mb-2">
             <div class="col">
-                <!-- <router-link class="h3 d-block mb-3" :to="{ name: 'case-licoes', params: { id: idCase }}" >{{ nomeCase }}</router-link> -->
+                <router-link class="btn btn-secondary btn-sm mb-4" :to="{ name: 'case-licoes', params: { id: idCase }}" >Voltar</router-link>
                 <h5>Lição: {{ titulo }}</h5>
-                <h6 v-if="!!dataLiberacao">Liberada em: {{ dataLiberacao }}</h6>
-                <h6 v-if="!!dataEncerramento">Termina em: {{ dataEncerramento }}</h6>
+                <h6 v-if="!!dataLiberacao">Liberação em: {{ dataLiberacao | dataHora }}</h6>
+                <h6 v-if="!!dataEncerramento">Encerramento em: {{ dataEncerramento | dataHora }}</h6>
             </div>
         </div>
         <form @submit.prevent="filtrarQuestoes" class="my-3">
@@ -36,18 +36,31 @@
           <div class="card-body">
             <pre>{{ resposta.resposta }}</pre>
           </div>
-          <form @submit.prevent="atribuirPontuacao(resposta)" class="card-footer text-muted">
-            <div class="form-row">
-              <div class="col-md-4">
-                <div class="input-group mb-3">
-                  <input type="number" class="form-control" placeholder="Nota" v-model="resposta.pontos" v-bind:id="'nota-resposta-'+resposta.idResposta" maxlength="10" required>
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="atribuir-nota">Atribuir Nota</button>
+          <div class="card-footer text-muted">
+            <div class="row">
+              <div class="col-sm-6">
+                <form @submit.prevent="atribuirPontuacao(resposta)" class="form-inline">
+                  <div class="form-group mb-2 mr-2">
+                    <label class="sr-only">Troféu</label>
+                    <input type="number" class="form-control form-control-sm" placeholder="Nota" v-model="resposta.pontosRecebidos" v-bind:id="'nota-resposta-'+resposta.idResposta" maxlength="10" required>
                   </div>
-                </div>
+                  <button type="submit" class="btn btn-primary btn-sm mb-2">Atribuir nota</button>
+                </form>
+              </div>
+              <div class="col-sm-6">
+                <form v-if="!!trofeus" @submit.prevent="atribuirTrofeu(resposta)" class="form-inline">
+                  <div class="form-group mb-2 mr-2">
+                    <label class="sr-only">Troféu</label>
+                    <select v-model="resposta.idTrofeuParaAtribuir" class="form-control form-control-sm" placeholder="Selecione um troféu.." required>
+                      <option value="" selected>Selecione um troféu..</option>
+                      <option v-for="trofeu in trofeus" :key="trofeu.idTrofeu" :value="trofeu.idTrofeu">{{ trofeu.nome }} ({{trofeu.pontos > 0 ? 'Ganha':'Perde'}} {{ Math.abs(trofeu.pontos) }} pontos)</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-secondary btn-sm mb-2">Atribuir troféu</button>
+                </form>
               </div>
             </div>
-          </form>
+          </div>
         </div>
     </div>
 </template>
@@ -57,13 +70,14 @@ import {
   filtrarQuestoes,
   atribuirNota
 } from "@/services/LicaoService";
+import { atribuirTrofeu } from "@/services/TrofeuService";
 export default {
   data() {
     return {
       idCase: 0,
       idLicao: 0,
       filtro: {
-        idQuestao: '',
+        idQuestao: "",
         removerQuestoesJaAvaliadas: true
       },
       titulo: "",
@@ -71,8 +85,14 @@ export default {
       dataLiberacao: "",
       dataEncerramento: "",
       questoes: [],
-      respostas: []
+      respostas: [],
+      trofeus: []
     };
+  },
+  filters: {
+    dataHora(data) {
+      return data ? new Date(data).toLocaleString("pt-BR") : "";
+    }
   },
   computed: {
     totalDeQuestoes() {
@@ -95,6 +115,13 @@ export default {
               notaMaxima: q.notaMaxima
             });
           });
+          response.data.trofeus.forEach(t => {
+            self.trofeus.push({
+              idTrofeu: t.idTrofeu,
+              nome: t.nome,
+              pontos: t.pontos
+            });
+          });
         })
         .catch(() => {});
     },
@@ -112,22 +139,46 @@ export default {
             idResposta: q.idResposta,
             resposta: q.resposta,
             idQuestao: q.idQuestao,
+            idEntregaDeLicao: q.idEntregaDeLicao,
             dataHoraEntrega: q.dataHoraEntrega,
             idGrupo: q.idGrupo,
-            pontos: ""
+            pontosRecebidos: q.pontosRecebidos,
+            idTrofeuParaAtribuir: ""
           });
         });
       });
     },
     atribuirPontuacao(resposta) {
       const self = this;
+      let params = {
+        IdResposta: resposta.idResposta,
+        Pontos: resposta.pontosRecebidos
+      };
 
-      atribuirNota(resposta)
+      atribuirNota(params)
         .then(() => {
           alert("Nota atribuída com sucesso.");
+          self.filtrarQuestoes();
         })
         .catch(() => {
           alert("Erro ao atribuir nota.");
+        });
+    },
+    atribuirTrofeu(resposta) {
+      const self = this;
+
+      let request = {
+        IdTrofeu: resposta.idTrofeuParaAtribuir,
+        IdEntregaDeLicao: resposta.idEntregaDeLicao,
+        IdResposta: resposta.idResposta
+      };
+
+      atribuirTrofeu(request)
+        .then(() => {
+          alert("Troféu atribuído com sucesso.");
+        })
+        .catch(() => {
+          alert("Erro ao atribuir troféu.");
         });
     }
   },

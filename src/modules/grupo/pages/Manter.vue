@@ -15,12 +15,12 @@
                             <input id="grupo-nome" type="text" class="form-control" v-model="nomeGrupo" minlength="3" maxlength="100" required>
                         </div>
                         <div class="form-group mt-4">
-                            <label for="grupo-descricao">Grito de guerra:</label>
+                            <label for="grupo-descricao">Grito de guerra (Opcional):</label>
                             <textarea id="grupo-descricao" class="form-control" rows="2" v-model="gritoDeGuerra" maxlength="1000"></textarea>
                         </div>
                     </div>
                 </div>
-                <div class="row">            
+                <div class="row">
                     <div class="col">
                         <button @click="voltarParaPrimeiraEtapa" type="button" class="btn btn-secondary">
                             Voltar
@@ -30,7 +30,7 @@
                         <button type="submit" class="btn btn-primary">Salvar</button>
                     </div>
                 </div>
-            </form>            
+            </form>
         </template>
         <template v-else>
             <div class="row">

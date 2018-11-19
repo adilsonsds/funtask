@@ -8,7 +8,7 @@
                 </router-link>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col">
                 <h5>Progresso do seu grupo</h5>
                 <div class="progress mb-4">
@@ -17,20 +17,21 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Grupos</h5>
                 <table class="table table-borderless table-hover">
                     <tbody>
-                        <tr v-for="grupo in grupos" :key="grupo.id">
+                        <tr v-for="(grupo, index) in grupos" :key="grupo.id">
+                            <td>{{ index + 1 }}</td>
                             <td>
-                                <i class="fas fa-user-circle" style="font-size: 20px;"></i>
+                                <i class="fas fa-users" style="font-size: 20px;"></i>
                             </td>
                             <td>
                                 <router-link :to="{ name: 'grupo', params: { id: grupo.id }}">{{ grupo.nome }}</router-link>
                             </td>
-                            <td>725</td>
+                            <td>{{grupo.pontos}}</td>
                         </tr>
                     </tbody>
                 </table>
