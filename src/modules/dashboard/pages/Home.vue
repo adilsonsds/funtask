@@ -13,14 +13,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
-                <div class="d-flex justify-content-between">
-                    <h5>Meus Cases de Negócio</h5>
-                    <router-link :to="{ name: 'case-novo' }" class="btn btn-primary btn-sm" title="Criar Case de Negócio">
-                        <i class="fas fa-plus-circle"></i>
-                        Criar um Case de Negócio
-                    </router-link>
-                </div>
+            <div class="col-md-6">
+                <h5>Meus Cases de Negócio</h5>
+            </div>
+            <div class="col-md-6 text-right">
+                <router-link :to="{ name: 'case-novo' }" class="btn btn-primary btn-sm" title="Criar Case de Negócio">
+                    <i class="fas fa-plus-circle"></i>
+                    Criar um Case de Negócio
+                </router-link>
             </div>
         </div>
         <hr>
